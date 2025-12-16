@@ -41,5 +41,5 @@
     And the login button should be displayed again on the screen
 
     Examples:
-      | username                    | password          |
-      | mohammad.sultan@brillio.com | Brilliouser@12345 |
+      | username | password |
+      |          |          |
