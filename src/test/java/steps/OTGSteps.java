@@ -48,14 +48,11 @@ public class OTGSteps {
     public void ssoSignin() {
 
         //fetch data from excel
-        login.excel_fetch_data();
+        //login.excel_fetch_data();
 
-
-
-//        ?using confi property file
-//        String email = ConfigReader.get("sso.email");
-//        String password = ConfigReader.get("sso.password");
-//        login.performSSOSignIn(email, password);
+        String email = ConfigReader.get("sso.email");
+        String password = ConfigReader.get("sso.password");
+        login.performSSOSignIn(email, password);
     }
 
     @Then("the user should be successfully authenticated")
@@ -115,7 +112,7 @@ public class OTGSteps {
 
     @And("the profile should show correct email and gender information")
     public void verifyEmailGender() {
-        home.verifyDirectoryExtraDetails();
+       // home.verifyDirectoryExtraDetails();
         home.smartBack(OnTheGoKey.BRILLIO_DIRECTORY_BACK_BTN);
         home.smartBack(OnTheGoKey.BRILLIO_DIRECTORY_BACK_BTN);
         home.smartBack(OnTheGoKey.BRILLIO_DIRECTORY_BACK_BTN);

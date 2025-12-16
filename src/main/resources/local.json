@@ -7,6 +7,7 @@
     "appium:nativeWebScreenshot": true,
     "appium:newCommandTimeout": 300,
     "appium:uiautomator2ServerLaunchTimeout": 60000,
+    "appium:adbExecTimeout": 60000,
     "appium:autoWebview": false,
     "appium:appWaitDuration": 15000
   },

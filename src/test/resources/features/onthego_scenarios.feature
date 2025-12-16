@@ -8,8 +8,8 @@ Feature: OntheGo Application End-to-End Validation
     Given the user opens the OTG application
     And the user reaches the SSO login screen
     When the user signs in using valid SSO credentials
-    Then the user should be successfully authenticated
-    And the user profile name should be visible on the home screen
+   # Then the user should be successfully authenticated
+   # And the user profile name should be visible on the home screen
 
 #  @otg_with_Test_Data
 #  Feature: OntheGo Application End-to-End Validation

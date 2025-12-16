@@ -95,7 +95,7 @@
     },
 
     "user_icon_top_left": {
-      "android": { "xpath": "(//android.widget.TextView[@text='OI']/parent::android.view.ViewGroup)[1]" },
+      "android": { "xpath": "(//android.widget.TextView[@text='SS']/parent::android.view.ViewGroup)[1]" },
       "ios":     { "xpath": "(//XCUIElementTypeImage[@name='user'])[1]" }
     },
 

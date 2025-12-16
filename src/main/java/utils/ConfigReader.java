@@ -14,18 +14,17 @@ public final class ConfigReader {
     private ConfigReader() {}
 
     /* =======================================================
-       STATIC INIT – LOAD CONFIG (BASE + OPTIONAL ENV)
+       STATIC INIT
        ======================================================= */
     static {
         try {
-            // 1️⃣ Always load base config
             loadFromClasspath("config/common.properties");
 
-            // 2️⃣ Optional env override (qa / uat / staging)
             String env = System.getProperty("env");
-
             if (env != null && !env.isBlank()) {
-                loadFromClasspathOptional("config/" + env.toLowerCase() + ".properties");
+                loadFromClasspathOptional(
+                        "config/" + env.toLowerCase() + ".properties"
+                );
                 System.out.println(">>> Loaded env config: " + env + ".properties");
             } else {
                 System.out.println(">>> No env specified. Using base config only.");
@@ -37,11 +36,13 @@ public final class ConfigReader {
     }
 
     /* =======================================================
-       PROPERTY FILE LOADERS
+       LOADERS
        ======================================================= */
     private static void loadFromClasspath(String path) throws Exception {
         try (InputStream is =
-                     ConfigReader.class.getClassLoader().getResourceAsStream(path)) {
+                     ConfigReader.class
+                             .getClassLoader()
+                             .getResourceAsStream(path)) {
 
             if (is == null) {
                 throw new RuntimeException("Config file not found: " + path);
@@ -52,7 +53,9 @@ public final class ConfigReader {
 
     private static void loadFromClasspathOptional(String path) throws Exception {
         try (InputStream is =
-                     ConfigReader.class.getClassLoader().getResourceAsStream(path)) {
+                     ConfigReader.class
+                             .getClassLoader()
+                             .getResourceAsStream(path)) {
 
             if (is != null) {
                 PROPS.load(is);
@@ -61,30 +64,24 @@ public final class ConfigReader {
     }
 
     /* =======================================================
-       MAIN GETTER (SYSTEM > ENV > FILE)
+       MAIN GETTERS
        ======================================================= */
     public static String get(String key) {
 
-        // 1️⃣ JVM property (-Dkey=value)
         String sys = System.getProperty(key);
         if (sys != null && !sys.isBlank()) {
             return sys;
         }
 
-        // 2️⃣ OS environment variable
         String env = System.getenv(key);
         if (env != null && !env.isBlank()) {
             return env;
         }
 
-        // 3️⃣ Properties file
         String val = PROPS.getProperty(key);
         if (val == null) return null;
 
-        // 4️⃣ ${ENV_VAR} substitution
         val = resolveEnv(val);
-
-        // 5️⃣ Jasypt decrypt if needed
         return JasyptUtil.decryptIfNeeded(val);
     }
 
@@ -94,36 +91,39 @@ public final class ConfigReader {
     }
 
     /* =======================================================
-       VARIABLE SUBSTITUTION ${VAR}
+       INLINE ${ENV_VAR} RESOLUTION (FIXED)
        ======================================================= */
     private static String resolveEnv(String val) {
-        if (val != null && val.startsWith("${") && val.endsWith("}")) {
-            String envKey = val.substring(2, val.length() - 1);
-            return System.getenv(envKey);
+        if (val == null) return null;
+
+        String result = val;
+
+        while (result.contains("${")) {
+            int start = result.indexOf("${");
+            int end = result.indexOf("}", start);
+
+            if (end == -1) break;
+
+            String envKey = result.substring(start + 2, end);
+            String envValue = System.getenv(envKey);
+
+            if (envValue == null || envValue.isBlank()) {
+                throw new RuntimeException(
+                        "❌ Environment variable not found: " + envKey
+                );
+            }
+
+            result = result.substring(0, start)
+                    + envValue
+                    + result.substring(end + 1);
         }
-        return val;
+
+        return result;
     }
 
     /* =======================================================
-       JSON SUPPORT (CLASSPATH SAFE)
+       JSON HELPERS
        ======================================================= */
-    public static JSONObject loadJson(String path) {
-        try (InputStream is =
-                     ConfigReader.class.getClassLoader().getResourceAsStream(path)) {
-
-            if (is == null) {
-                throw new RuntimeException("JSON file not found: " + path);
-            }
-
-            JSONParser parser = new JSONParser();
-            return (JSONObject) parser.parse(new InputStreamReader(is));
-
-        } catch (Exception e) {
-            throw new RuntimeException("❌ Failed to load JSON file: " + path, e);
-        }
-    }
-
-    // utils/ConfigReader.java
     public static JSONObject loadJsonFromClasspath(String resourcePath) {
         try (InputStream is =
                      ConfigReader.class
@@ -131,7 +131,9 @@ public final class ConfigReader {
                              .getResourceAsStream(resourcePath)) {
 
             if (is == null) {
-                throw new RuntimeException("❌ Resource not found on classpath: " + resourcePath);
+                throw new RuntimeException(
+                        "❌ Resource not found: " + resourcePath
+                );
             }
 
             JSONParser parser = new JSONParser();
@@ -139,9 +141,8 @@ public final class ConfigReader {
 
         } catch (Exception e) {
             throw new RuntimeException(
-                    "❌ Failed to load JSON from classpath: " + resourcePath, e
+                    "❌ Failed to load JSON: " + resourcePath, e
             );
         }
     }
-
 }

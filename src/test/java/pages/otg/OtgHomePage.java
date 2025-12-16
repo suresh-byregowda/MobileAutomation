@@ -118,7 +118,7 @@ public class OtgHomePage extends BasePage {
     public void openUserMenu() {
         perform("Open User Menu", () -> {
             WebElement menu = locator.one_ele(OnTheGoKey.USER_ICON_TOP_LEFT);
-            safeClick(menu, 40);
+            safeClick(menu, 10);
         });
     }
 
@@ -165,7 +165,7 @@ public class OtgHomePage extends BasePage {
     public static void smartBack(OnTheGoKey backKey) {
         try {
             WebElement back = new LocatorLogic(driver()).one_ele(backKey);
-            safeClick(back, 30);
+            safeClick(back, 5);
             return;
         } catch (Exception ignored) {}
 

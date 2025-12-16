@@ -15,7 +15,7 @@ public final class Timeouts {
     private Timeouts() {}
 
     // Hard defaults (used only if nothing is provided)
-    private static final int DEFAULT_GLOBAL = 50;
+    private static final int DEFAULT_GLOBAL = 20;
     private static final int DEFAULT_CLICK  = DEFAULT_GLOBAL;
     private static final int DEFAULT_TYPE   = DEFAULT_GLOBAL;
 
