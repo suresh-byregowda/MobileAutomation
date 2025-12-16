@@ -95,12 +95,12 @@
     },
 
     "user_icon_top_left": {
-      "android": { "xpath": "(//android.widget.TextView[@text='OI']/parent::android.view.ViewGroup)[1]" },
+      "android": { "xpath": "(//android.widget.TextView[@text='MS']/parent::android.view.ViewGroup)[1]" },
       "ios":     { "xpath": "(//XCUIElementTypeImage[@name='user'])[1]" }
     },
 
     "username_verification": {
-      "android": { "xpath": "//android.widget.TextView[@text='onthego In']" },
+      "android": { "xpath": "//android.widget.TextView[@text='Mohammad Sultan']" },
       "ios":     { "accessibilityId": "usernameLabel" }
     },
 

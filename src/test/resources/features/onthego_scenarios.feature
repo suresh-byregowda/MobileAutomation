@@ -1,33 +1,27 @@
 @otg
-Feature: OntheGo Application End-to-End Validation
+#Feature: OntheGo Application End-to-End Validation
   #As an OTG user
   #I want to validate core app workflows
   #So that I can ensure the login, navigation, directory search, and logout features work reliably
 
-  Scenario: User performs a complete OTG journey
-    Given the user opens the OTG application
-    And the user reaches the SSO login screen
-    When the user signs in using valid SSO credentials
-    Then the user should be successfully authenticated
-    And the user profile name should be visible on the home screen
-
-#  @otg_with_Test_Data
-#  Feature: OntheGo Application End-to-End Validation
-#  #As an OTG user
-#  #I want to validate core app workflows
-#  #So that I can ensure the login, navigation, directory search, and logout features work reliably
-#
-#  Scenario Outline: User performs a complete OTG journey
+#  Scenario: User performs a complete OTG journey
 #    Given the user opens the OTG application
 #    And the user reaches the SSO login screen
-#    When the user signs in using valid SSO credentials with "<username>" and "<password>"
+#    When the user signs in using valid SSO credentials
 #    Then the user should be successfully authenticated
 #    And the user profile name should be visible on the home screen
-#
-#    Examples:
-#      | username                 | password   |
-#      | user1@example.com        | Pass123!   |
 
+#  @otg_with_Test_Data
+  Feature: OntheGo Application End-to-End Validation
+  #As an OTG user
+  #I want to validate core app workflows
+  #So that I can ensure the login, navigation, directory search, and logout features work reliably
+
+  Scenario Outline: User performs a complete OTG journey
+    Given the user opens the OTG application
+    And the user reaches the SSO login screen
+    When the user signs in using valid SSO credentials with "<username>" and "<password>"
+    Then the user should be successfully authenticated with the profile name
 
 
 
@@ -45,3 +39,7 @@ Feature: OntheGo Application End-to-End Validation
     And the user initiates logout
     Then the user should be logged out successfully
     And the login button should be displayed again on the screen
+
+    Examples:
+      | username                    | password          |
+      | mohammad.sultan@brillio.com | Brilliouser@12345 |

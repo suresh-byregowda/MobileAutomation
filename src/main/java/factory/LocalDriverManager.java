@@ -49,6 +49,8 @@ public class LocalDriverManager {
             options.setPlatformName("Android");
             options.setAutomationName("UiAutomator2");
             options.setDeviceName(ConfigReader.get("device_name"));
+            options.setAppPackage(ConfigReader.get("app_package"));
+            options.setAppActivity(ConfigReader.get("app_activity"));
             options.setAutoGrantPermissions(true);
 
             // ---- Chromedriver (ONLY if webview is used) ----
