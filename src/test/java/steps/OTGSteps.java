@@ -38,10 +38,10 @@ public class OTGSteps {
     }
 
     // for test data using data table
-//    @When("the user signs in using valid SSO credentials with {string} and {string}")
-//    public void theUserSignsInUsingValidSSOCredentialsWithAnd(String username, String password) {
-//        login.performSSOSignIn(username, password);
-//    }
+    @When("the user signs in using valid SSO credentials with {string} and {string}")
+    public void theUserSignsInUsingValidSSOCredentialsWithAnd(String username, String password) {
+        login.performSSOSignIn(username, password);
+    }
 
 
     @When("the user signs in using valid SSO credentials")
@@ -58,15 +58,11 @@ public class OTGSteps {
 //        login.performSSOSignIn(email, password);
     }
 
-    @Then("the user should be successfully authenticated")
-    public void authenticated() {
-        home.verifyLoggedInUser();
-    }
 
-    @And("the user profile name should be visible on the home screen")
+    @And("the user should be successfully authenticated with the profile name")
     public void verifyProfileName() {
         home.verifyLoggedInUser();
-        home.goBackFromProfile();
+//        home.goBackFromProfile();
 
     }
 
