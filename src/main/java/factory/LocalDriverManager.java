@@ -63,7 +63,11 @@ public class LocalDriverManager {
             options.setDeviceName(ConfigReader.get("device_name"));
             options.setAppPackage(ConfigReader.get("app_package"));
             options.setAppActivity(ConfigReader.get("app_activity"));
+<<<<<<< HEAD
             options.setDisableWindowAnimation(true);
+=======
+            options.setAutoGrantPermissions(true);
+>>>>>>> 6c963797aed92ae92152724e5eeedeac698e375e
 
             // 3️⃣ Chromedriver (cross-platform safe)
             applyChromedriverIfPresent(options);

@@ -173,7 +173,7 @@ public final class MobileUtility {
        ======================================================= */
 
     // BOTH
-   // Drags source element and drops on destination
+    // Drags source element and drops on destination
     public static void dragAndDrop(WebElement source, WebElement destination) {
         Map<String, Object> params = new HashMap<>();
         params.put("sourceId", id(source));
@@ -212,7 +212,6 @@ public final class MobileUtility {
     }
 
 
-
     /* =======================================================
                      CROSS-PLATFORM TAP
        ======================================================= */
@@ -232,7 +231,7 @@ public final class MobileUtility {
     }
 
     // BOTH
-   // Double tap on element
+    // Double tap on element
     public static void doubleTap(WebElement element) {
         Map<String, Object> params = new HashMap<>();
         params.put("elementId", id(element));
@@ -251,7 +250,41 @@ public final class MobileUtility {
     // BOTH
 // Android → presses hardware BACK button
 // iOS → navigate back or tap "Back" button
-    public static void performBack() {
+
+
+    public static void performAndroidBack() {
+        try {
+            // Preferred: hardware BACK key
+            ((io.appium.java_client.android.AndroidDriver) driver())
+                    .pressKey(new io.appium.java_client.android.nativekey.KeyEvent(
+                            io.appium.java_client.android.nativekey.AndroidKey.BACK));
+            System.out.println("✔ Android BACK key pressed");
+        } catch (Exception e) {
+            System.out.println("ℹ BACK key failed, fallback to navigate().back()");
+            driver().navigate().back();
+        }
+    }
+
+
+    public static void performIOSBack() {
+        try {
+            // Try common nav bar Back button
+            try {
+                driver().findElement(AppiumBy.accessibilityId("Back")).click();
+                System.out.println("✔ iOS tapped Back button");
+                return;
+            } catch (Exception ignored) {
+            }
+            // Fallback: browser-like back for WebView
+            driver().navigate().back();
+            System.out.println("✔ iOS navigate().back() (fallback)");
+        } catch (Exception e) {
+            System.out.println("❌ iOS back action failed: " + e.getMessage());
+        }
+    }
+
+
+        public static void performBack() {
         if (isAndroid()) {
             Map<String, Object> params = new HashMap<>();
             params.put("action", "back");
@@ -303,7 +336,7 @@ public final class MobileUtility {
        ======================================================= */
 
     // BOTH
-   // Waits until WEBVIEW context appears and switches
+    // Waits until WEBVIEW context appears and switches
     public static void waitForWebView(int timeoutSeconds) {
 
         SupportsContextSwitching ctx = (SupportsContextSwitching) driver();
@@ -334,7 +367,7 @@ public final class MobileUtility {
     }
 
     // BOTH
- // Switches back to NATIVE_APP
+    // Switches back to NATIVE_APP
     public static void switchToNative() {
         ((SupportsContextSwitching) driver()).context("NATIVE_APP");
         System.out.println("✔ Switched to NATIVE_APP");
@@ -344,7 +377,7 @@ public final class MobileUtility {
                     SCREENSHOTS
        ======================================================= */
     // BOTH
-   // Returns screenshot as byte[]
+    // Returns screenshot as byte[]
     public static byte[] screenshotBytes() {
         try {
             return ((TakesScreenshot) driver())
@@ -386,6 +419,7 @@ public final class MobileUtility {
             System.out.println("ℹ No alert present");
         }
     }
+
     // BOTH
 // Dismisses system alert if present
     public static void dismissAlert() {
@@ -408,6 +442,7 @@ public final class MobileUtility {
         scrollToText(visibleText);
         driver().findElement(By.xpath("//*[@text='" + visibleText + "']")).click();
     }
+
     // iOS ONLY
 // Selects value from iOS PickerWheel
     public static void selectIOSDropdownValue(String value) {
@@ -497,10 +532,9 @@ public final class MobileUtility {
     }
 
 
-
-/* =======================================================
-   ASSERTIONS (WebElement-based) — uses Timeouts.global()
-   ======================================================= */
+    /* =======================================================
+       ASSERTIONS (WebElement-based) — uses Timeouts.global()
+       ======================================================= */
 // Assertion helpers with screenshots on failure
     private static WebDriverWait waitGlobal() {
         return new WebDriverWait(driver(), Timeouts.global());
@@ -673,40 +707,47 @@ public final class MobileUtility {
             driver().executeScript("mobile: pressKey", Map.of("keycode", 4));
         }
     }
+
     // Android HOME key (keycode 3)
     public static void pressHome() {
         if (isAndroid()) {
             driver().executeScript("mobile: pressKey", Map.of("keycode", 3));
         }
     }
+
     // Android ENTER key (keycode 66)
     public static void pressEnter() {
         if (isAndroid()) {
             driver().executeScript("mobile: pressKey", Map.of("keycode", 66));
         }
     }
+
     // Android VOLUME UP (keycode 24)
     public static void pressVolumeUp() {
         if (isAndroid()) {
             driver().executeScript("mobile: pressKey", Map.of("keycode", 24));
         }
     }
+
     // Android VOLUME DOWN (keycode 25)
     public static void pressVolumeDown() {
         if (isAndroid()) {
             driver().executeScript("mobile: pressKey", Map.of("keycode", 25));
         }
     }
+
     // Android POWER button (keycode 26)
     public static void pressPower() {
         if (isAndroid()) {
             driver().executeScript("mobile: pressKey", Map.of("keycode", 26));
         }
     }
+
     // Android ESCAPE (mapped to BACK)
     public static void pressEscape() {
         pressBack(); // Escape == Back on Android
     }
+
     // Android MENU key (keycode 82)
     public static void pressMenu() {
         if (isAndroid()) {
@@ -716,6 +757,7 @@ public final class MobileUtility {
             );
         }
     }
+
     // Android SEARCH key (keycode 84)
     public static void pressSearch() {
         if (isAndroid()) {
@@ -724,6 +766,29 @@ public final class MobileUtility {
                     Map.of("keycode", 84)
             );
         }
+    }
+
+
+    /* =======================================================
+       COORDINATE TAPS (Android + iOS) — W3C Actions
+       ======================================================= */
+    public static void tapAt(int x, int y) {
+        org.openqa.selenium.Dimension size = driver().manage().window().getSize();
+        int safeX = Math.max(0, Math.min(x, size.getWidth() - 1));
+        int safeY = Math.max(0, Math.min(y, size.getHeight() - 1));
+
+        org.openqa.selenium.interactions.PointerInput finger =
+                new org.openqa.selenium.interactions.PointerInput(org.openqa.selenium.interactions.PointerInput.Kind.TOUCH, "finger");
+        org.openqa.selenium.interactions.Sequence tap = new org.openqa.selenium.interactions.Sequence(finger, 1);
+
+        tap.addAction(finger.createPointerMove(java.time.Duration.ZERO,
+                org.openqa.selenium.interactions.PointerInput.Origin.viewport(), safeX, safeY));
+        tap.addAction(finger.createPointerDown(org.openqa.selenium.interactions.PointerInput.MouseButton.LEFT.asArg()));
+        tap.addAction(finger.createPointerUp(org.openqa.selenium.interactions.PointerInput.MouseButton.LEFT.asArg()));
+
+        driver().perform(java.util.Collections.singletonList(tap));
+
+
     }
 
 

@@ -24,8 +24,10 @@ public class OtgHomePage extends BasePage {
     // -------------------------------------------------------------------
     public void verifyLoggedInUser() {
         perform("Verify logged-in username", () -> {
-            locator.one_ele(OnTheGoKey.USER_ICON_TOP_LEFT).click();
-            locator.one_ele(OnTheGoKey.USERNAME_VERIFICATION);
+            MobileUtility.performAndroidBack();
+            MobileUtility.safeClick(locator.one_ele(OnTheGoKey.USER_ICON_TOP_LEFT), 50);
+            locator.one_ele(OnTheGoKey.USERNAME_VERIFICATION).isDisplayed();
+            MobileUtility.tapAt(700,400);
         });
     }
 
