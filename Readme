@@ -1,0 +1,246 @@
+# pocandroid — Cross-Platform Mobile Automation Framework
+
+# 📌 Overview
+
+`pocandroid` is a production-grade, cross-platform mobile automation framework for Android and iOS, built using Appium + Java + Maven.
+It follows MAANG-level design principles: clean separation of concerns, configuration-driven execution, reusable utilities, and scalable architecture.
+
+The framework supports:
+
+ Local execution (emulator / simulator / real device)
+ Cloud execution (BrowserStack)
+ Single codebase for Android & iOS
+ BDD-style tests with Cucumber
+ Enterprise-ready reporting and CI integration
+
+---
+
+# ✨ Key Capabilities
+
+ ✅ Android & iOS support with shared test logic
+ ✅ Local & cloud execution without code changes
+ ✅ Page Object Model (POM)
+ ✅ Unified locator strategy (JSON + enums)
+ ✅ Secure configuration & secret handling
+ ✅ Programmatic Appium server management
+ ✅ Extent HTML reporting with screenshots & videos
+ ✅ CI/CD ready (Jenkins, GitHub Actions, Azure DevOps)
+
+---
+
+# 🧱 Architecture & Tech Stack
+
+| Layer                 | Technology / Pattern               | Responsibility                       |
+| --------------------- | ---------------------------------- | ------------------------------------ |
+| Test Definition   | Cucumber (BDD), Gherkin            | Human-readable scenarios             |
+| Execution Engine  | Java + Maven + Cucumber Runner     | Scenario execution lifecycle         |
+| Design Pattern    | Page Object Model (POM)            | Separation of UI & test logic        |
+| Locator Strategy  | JSON locators + Enum keys          | Unified Android/iOS locators         |
+| Driver Management | Factory Pattern                    | Local & BrowserStack driver creation |
+| Appium Handling   | Programmatic server start/stop     | Zero manual Appium dependency        |
+| Utilities         | Gestures, waits, context switching | Cross-platform abstraction           |
+| Configuration     | Properties + JSON                  | Environment & platform switching     |
+| Reporting         | Extent Reports                     | HTML reports with screenshots/videos |
+| CI/CD             | Maven CLI                          | Pipeline-friendly execution          |
+
+---
+
+# 📁 Project Structure
+
+```
+pocandroid/
+├── src/
+│   ├── main/java/            # Framework core (driver, utils, base classes)
+│   ├── main/resources/       # Configs, capabilities, locator JSON
+│   ├── test/java/            # Tests, pages, steps, hooks, listeners
+│   └── test/resources/       # Feature files & test data
+├── pom.xml                   # Maven build & dependencies
+├── README.md                 # Documentation
+└── test-output/              # Reports, screenshots, videos
+```
+
+---
+
+# ⚙️ Configuration Model (Important)
+
+# Execution Control
+
+| Key        | Purpose                   |
+| ---------- | ------------------------- |
+| `run_env`  | `local` or `browserstack` |
+| `platform` | `android` or `ios`        |
+
+# Config Sources
+
+ `config.properties` → Common defaults
+ `local.properties` → Local-only settings (recording, paths)
+ `browserstack.json` → Cloud capability templates
+ Secrets → Encrypted or environment variables
+
+---
+
+# 🖥️ Local Execution
+
+# Prerequisites
+
+ Java 11+
+ Maven
+ Node.js + Appium 2.x
+ Android SDK or Xcode (based on platform)
+
+# Steps
+
+1. Set in `config.properties`:
+
+   ```properties
+   run_env=local
+   platform=android
+   ```
+2. Update `local.json` with device/app details
+3. Run:
+
+   ```bash
+   mvn clean test
+   ```
+
+Appium server starts automatically and stops after execution.
+
+---
+
+# ☁️ Cloud Execution (BrowserStack)
+
+# Steps
+
+1. Upload app to BrowserStack and note `bs://` app id
+2. Set encrypted values in environment config:
+
+   ```properties
+   run_env=browserstack
+   bs_app=bs://xxxx
+   ```
+3. Run:
+
+   ```bash
+   mvn clean test
+   ```
+
+✔ BrowserStack handles:
+
+ Device provisioning
+ Video recording
+ Logs & network capture
+
+---
+
+# 🎥 Video & Screenshot Handling
+
+| Mode             | Behavior                               |
+| ---------------- | -------------------------------------- |
+| Local        | Optional recording (config-controlled) |
+| BrowserStack | Always recorded by cloud               |
+
+ Screenshots auto-attached on failure
+ Videos saved under `test-output/videos` (local only)
+
+---
+
+# 📊 Reporting
+
+The framework uses Extent Reports for clear, offline HTML reporting.
+
+# Listener Components
+
+ ExtentManager → Initializes report & path
+ ExtentTestManager → Manages test lifecycle
+ ExtentTestNGListener → Logs pass/fail/skip, attaches screenshots
+
+Reports are generated under:
+
+```
+test-output/extent-report.html
+```
+
+---
+
+# 🧪 Locator Strategy (Unified Android & iOS)
+
+ Single locator definition per element
+ JSON structure contains both `android` and `ios` blocks
+ Runtime platform decides locator resolution
+ Enum keys ensure compile-time safety
+
+✔ Same tests
+✔ Same pages
+✔ One codebase
+
+---
+
+# 🔐 Security & Best Practices
+
+ ❌ No credentials in code
+ ❌ No secrets in JSON
+ ✅ Encrypted properties / env vars
+ ✅ Masked logs
+ ✅ CI-safe configuration
+
+---
+
+# 🛠️ Common Issues & Fixes
+
+| Issue                | Resolution                              |
+| -------------------- | --------------------------------------- |
+| Appium port busy     | Kill existing process or change port    |
+| App not launching    | Verify app path / package & activity    |
+| iOS signing error    | Validate IPA, UDID, provisioning        |
+| BrowserStack failure | Check credentials & uploaded app        |
+| Missing recordings   | Ensure `record_video=true` (local only) |
+
+---
+
+# 🎯 Why This Framework?
+
+ Scales from POC to enterprise
+ Minimal duplication
+ Clear ownership of responsibilities
+ Easy onboarding for new engineers
+ Ready for CI/CD pipelines
+
+---
+
+# 🧩 What’s Included
+
+ Driver factories (Local & BrowserStack)
+ Programmatic Appium management
+ Unified locator system
+ Page Object Model
+ Cross-platform utilities
+ Config-driven execution
+ Extent reporting
+ Sample test scaffolding
+
+---
+
+# 🚀 Recommended Workflow
+
+1. Clone repo
+2. Update configs for platform & environment
+3. Run tests locally or on cloud
+4. Review reports in `test-output`
+5. Add pages & scenarios using existing patterns
+
+---
+
+#Pending stacks on the pipeleine
+
+1. Rest assured Api support
+2. Retry analyzer
+3. OS specfic driver invocation
+4. Suite Development/Cucmber Tag
+5. Parallel Scaling 20 devices on browser stack
+
+
+# 🏁 Final Note
+
+This repository is designed to reflect real-world,  mobile automation standards — clean, secure, extensible, and production-ready.
+
+---

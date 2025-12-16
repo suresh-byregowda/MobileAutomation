@@ -1,0 +1,191 @@
+{
+  "FormPage": {
+    "nameField": {
+      "android": { "xpath": "//*[@resource-id='com.androidsample.generalstore:id/nameField']" },
+      "ios":     { "accessibilityId": "nameField" }
+    },
+    "countrySpinner": {
+      "android": { "xpath": "//*[@resource-id='com.androidsample.generalstore:id/spinnerCountry']" },
+      "ios":     { "accessibilityId": "countryPicker" }
+    },
+    "letsShopBtn": {
+      "android": { "xpath": "//*[@resource-id='com.androidsample.generalstore:id/btnLetsShop']" },
+      "ios":     { "accessibilityId": "letsShop" }
+    },
+    "radioMale": {
+      "android": { "xpath": "//*[@resource-id='com.androidsample.generalstore:id/radioMale']" },
+      "ios":     { "accessibilityId": "radioMale" }
+    },
+    "radioFemale": {
+      "android": { "xpath": "//*[@resource-id='com.androidsample.generalstore:id/radioFemale']" },
+      "ios":     { "accessibilityId": "radioFemale" }
+    }
+  },
+
+  "ProductPage": {
+    "productName": {
+      "android": { "xpath": "//*[@resource-id='com.androidsample.generalstore:id/productName']" },
+      "ios":     { "xpath": "//XCUIElementTypeStaticText[@name='productName']" }
+    },
+    "addCartBtn": {
+      "android": { "xpath": "//*[@resource-id='com.androidsample.generalstore:id/productAddCart']" },
+      "ios":     { "accessibilityId": "addToCart" }
+    },
+    "cartBtn": {
+      "android": { "xpath": "//*[@resource-id='com.androidsample.generalstore:id/btnCart']" },
+      "ios":     { "accessibilityId": "cartButton" }
+    }
+  },
+
+  "CartPage": {
+    "productPrice": {
+      "android": { "xpath": "//*[@resource-id='com.androidsample.generalstore:id/productPrice']" },
+      "ios":     { "accessibilityId": "productPrice" }
+    },
+    "totalAmount": {
+      "android": { "xpath": "//*[@resource-id='com.androidsample.generalstore:id/totalAmountLbl']" },
+      "ios":     { "accessibilityId": "totalAmount" }
+    },
+    "termsBtn": {
+      "android": { "xpath": "//*[@resource-id='com.androidsample.generalstore:id/termsButton']" },
+      "ios":     { "accessibilityId": "terms" }
+    }
+  },
+
+
+  "onTheGo": {
+    "login": {
+      "android": { "accessibilityId": "LOGIN" },
+      "ios":     { "accessibilityId": "loginButton" }
+    },
+
+    "Email_Input": {
+      "android": { "xpath": "//input[@name='loginfmt']" },
+      "ios":     { "xpath": "//XCUIElementTypeTextField[@name='email']" }
+    },
+
+    "Next_Button": {
+      "android": { "xpath": "//input[@id='idSIButton9']" },
+      "ios":     { "xpath": "//XCUIElementTypeButton[@name='Next']" }
+    },
+
+    "Password_Input": {
+      "android": { "id": "i0118" },
+      "ios":     { "accessibilityId": "password" }
+    },
+
+    "Signin_Button": {
+      "android": { "id": "idSIButton9" },
+      "ios":     { "xpath": "//XCUIElementTypeButton[@name='Sign in']" }
+    },
+
+    "home_icon_tail_bar": {
+      "android": { "xpath": "(//android.view.View/child::android.view.View)[1]" },
+      "ios":     { "accessibilityId": "homeIcon" }
+    },
+
+    "tools_utility_tail_bar": {
+      "android": { "xpath": "(//android.view.View/child::android.view.View)[2]" },
+      "ios":     { "accessibilityId": "toolsUtility" }
+    },
+
+    "timesheet_backbtn": {
+      "android": { "xpath": "//android.widget.TextView[@text='uE837']" },
+      "ios":     { "accessibilityId": "backButton" }
+    },
+
+    "user_icon_top_left": {
+      "android": { "xpath": "(//android.widget.TextView[@text='OI']/parent::android.view.ViewGroup)[1]" },
+      "ios":     { "xpath": "(//XCUIElementTypeImage[@name='user'])[1]" }
+    },
+
+    "username_verification": {
+      "android": { "xpath": "//android.widget.TextView[@text='onthego In']" },
+      "ios":     { "accessibilityId": "usernameLabel" }
+    },
+
+    "explore_tail_bar": {
+      "android": { "xpath": "(//android.view.View/child::android.view.View)[4]" },
+      "ios":     { "accessibilityId": "exploreTab" }
+    },
+
+    "brillio_Directory_icon": {
+      "android": { "xpath": "//android.widget.TextView[@text='Brillio Directory']" },
+      "ios":     { "accessibilityId": "brillioDirectory" }
+    },
+
+    "project_allocation_icon": {
+      "android": { "xpath": "//android.widget.TextView[@text='Project Allocation']" },
+      "ios":     { "accessibilityId": "projectAllocation" }
+    },
+
+    "current_allocation_details": {
+      "android": { "xpath": "//android.widget.TextView[@text='Verizon Account : OTG Test Multi Sow with Multi Allocation']/parent::android.view.ViewGroup" },
+      "ios":     { "accessibilityId": "currentAllocationDetails" }
+    },
+
+    "past_allocations": {
+      "android": { "xpath": "(//android.widget.TextView[@text='AA Corporation Ltd : CSX Project test1'])[1]" },
+      "ios":     { "accessibilityId": "pastAllocations" }
+    },
+
+    "directory_search_icon": {
+      "android": { "xpath": "//android.widget.TextView[@text='My Department']/parent::android.view.ViewGroup/parent::android.view.ViewGroup/parent::android.view.ViewGroup/parent::android.view.ViewGroup/following-sibling::android.view.ViewGroup" },
+      "ios":     { "accessibilityId": "directorySearchIcon" }
+    },
+
+    "directory_search_bar": {
+      "android": { "xpath": "//android.widget.EditText[@text='Search by Name']" },
+      "ios":     { "xpath": "//XCUIElementTypeSearchField[@name='Search by Name']" }
+    },
+
+    "directory_search_icon_2": {
+      "android": { "xpath": "//android.widget.EditText[@text='Search by Name']/parent::android.view.ViewGroup/child::android.view.ViewGroup" },
+      "ios":     { "accessibilityId": "directorySearchIcon2" }
+    },
+
+    "search_first_result": {
+      "android": { "xpath": "(//android.widget.EditText[@text='Pawan']/parent::android.view.ViewGroup/following-sibling::android.widget.ScrollView/child::android.view.ViewGroup/child::android.view.ViewGroup)[1]" },
+      "ios":     { "xpath": "(//XCUIElementTypeCell)[1]" }
+    },
+
+    "profile_info": {
+      "android": { "xpath": "(//android.widget.TextView[@text='Profile']/parent::android.view.ViewGroup/following-sibling::android.view.ViewGroup/descendant::android.view.ViewGroup)[2]" },
+      "ios":     { "xpath": "//XCUIElementTypeStaticText[@name='Profile']" }
+    },
+
+    "email_verify": {
+      "android": { "xpath": "//*[@class='android.widget.TextView' and contains(@text, 'brillio.com')]" },
+      "ios":     { "xpath": "//XCUIElementTypeStaticText[contains(@value, 'brillio.com')]" }
+    },
+
+    "Gender_verify": {
+      "android": { "xpath": "//*[@class='android.widget.TextView' and contains(@text, 'Gender')]" },
+      "ios":     { "xpath": "//XCUIElementTypeStaticText[contains(@value, 'Gender')]" }
+    },
+
+    "profile_back_btn": {
+      "android": { "xpath": "//android.widget.TextView[@text='Profile']/parent::android.view.ViewGroup/child::android.view.ViewGroup" },
+      "ios":     { "accessibilityId": "profileBack" }
+    },
+
+    "Brillio_directory_back_btn": {
+      "android": { "xpath": "//android.widget.TextView[@text='\\uE837']/.." },
+      "ios":     { "accessibilityId": "directoryBack" }
+    },
+
+    "logout_btn": {
+      "android": { "xpath": "//android.widget.TextView[@text='Logout']" },
+      "ios":     { "accessibilityId": "logout" }
+    },
+
+    "logout_btn_1": {
+      "android": { "xpath": "//android.view.ViewGroup[@content-desc='Logout']" },
+      "ios":     { "accessibilityId": "logout2" }
+    },
+    "logout_btn_2": {
+      "android": { "xpath": "//android.view.ViewGroup[@content-desc='Logout']" },
+      "ios":     { "accessibilityId": "logout2" }
+    }
+  }
+}

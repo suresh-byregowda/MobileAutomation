@@ -1,0 +1,24 @@
+{
+  "android": {
+    "platformName": "Android",
+    "appium:automationName": "UiAutomator2",
+    "appium:autoGrantPermissions": true,
+    "appium:noReset": true,
+    "appium:nativeWebScreenshot": true,
+    "appium:newCommandTimeout": 300,
+    "appium:uiautomator2ServerLaunchTimeout": 60000,
+    "appium:autoWebview": false,
+    "appium:appWaitDuration": 15000
+  },
+
+  "ios": {
+    "platformName": "iOS",
+    "appium:automationName": "XCUITest",
+    "appium:autoAcceptAlerts": true,
+    "appium:noReset": true,
+    "appium:newCommandTimeout": 300,
+    "appium:appWaitDuration": 15000,
+    "appium:wdaLaunchTimeout": 60000,
+    "appium:wdaConnectionTimeout": 60000
+  }
+}
