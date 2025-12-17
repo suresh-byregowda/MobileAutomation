@@ -30,10 +30,20 @@ public class AppiumServerManager {
         }
 
         try {
-            System.out.println(">>> Starting Appium Server (local execution)");
+            System.out.println(">>> Starting Appium Server via main.js (Appium 3)");
+
+            // Node executable (picked from PATH – must be Node 24)
+            String nodeExe = "node";
+
+            // Appium 3 main entry
+            String appiumMain =
+                    System.getProperty("user.home") +
+                            "\\AppData\\Roaming\\npm\\node_modules\\appium\\build\\lib\\main.js";
 
             ProcessBuilder builder = new ProcessBuilder(
-                    "appium",
+                    "cmd.exe", "/c",
+                    nodeExe,
+                    appiumMain,
                     "--address", "127.0.0.1",
                     "--port", "4723"
             );
@@ -41,11 +51,12 @@ public class AppiumServerManager {
             builder.redirectErrorStream(true);
             appiumProcess = builder.start();
 
-            // Print Appium logs
+            // Stream Appium logs
             new Thread(() -> {
                 try (BufferedReader reader =
                              new BufferedReader(
-                                     new InputStreamReader(appiumProcess.getInputStream()))) {
+                                     new InputStreamReader(
+                                             appiumProcess.getInputStream()))) {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         System.out.println("[APPIUM] " + line);
@@ -54,7 +65,6 @@ public class AppiumServerManager {
             }).start();
 
             waitUntilServerIsUp();
-
             System.out.println(">>> Appium Server started successfully.");
 
         } catch (Exception e) {
