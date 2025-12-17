@@ -1,7 +1,9 @@
 package pages;
 
 import base.BasePage;
+import factory.DriverFactory;
 import hooks.Hooks;
+import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
@@ -17,8 +19,9 @@ public class CartPage extends BasePage {
     private final LocatorLogic locator;
 
     public CartPage() {
-        super(Hooks.getDriver());
-        this.locator = new LocatorLogic(Hooks.getDriver());
+        super(DriverFactory.getDriver());
+        AppiumDriver driver = DriverFactory.getDriver();
+        this.locator = new LocatorLogic(driver);
     }
 
     /* ===========================================================

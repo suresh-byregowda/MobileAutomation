@@ -1,7 +1,9 @@
 package pages.otg;
 
 import base.BasePage;
+import factory.DriverFactory;
 import hooks.Hooks;
+import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.WebElement;
 import utils.*;
 import utils.keys.OnTheGoKey;
@@ -14,22 +16,32 @@ public class OtgLoginPage extends BasePage {
     private final LocatorLogic locator;
 
     public OtgLoginPage() {
-        super(Hooks.getDriver());
-        this.locator = new LocatorLogic(Hooks.getDriver());
+        super(DriverFactory.getDriver());
+        AppiumDriver driver = DriverFactory.getDriver();
+        this.locator = new LocatorLogic(driver);
     }
 
     // -------------------------------------------------------------------
     //                              LOGIN PAGE
     // -------------------------------------------------------------------
     public void waitForLoginPage() {
-        perform("Wait for OTG Login Page", () ->
-                locator.one_ele(OnTheGoKey.LOGIN));
+        perform(
+                "Wait for OTG Login Page",
+                () -> {
+                    WebElement login =
+                            locator.one_ele(OnTheGoKey.LOGIN);
+                    waitForVisible(login);
+                    return login; // important for Callable<T>
+                },
+                true   // ✅ force screenshot
+        );
     }
-
     public void tapLogin() {
         perform("Tap Login Button", () -> {
             WebElement login = locator.one_ele(OnTheGoKey.LOGIN);
             MobileUtility.safeClick(login, 50);
+            // Example of force screen shot
+            clickWithScreenshot(login, "Tap Login Button");
         });
 
 

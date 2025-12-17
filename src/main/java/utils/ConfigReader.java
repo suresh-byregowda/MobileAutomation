@@ -18,17 +18,15 @@ public final class ConfigReader {
        ======================================================= */
     static {
         try {
+            // 1️⃣ Always load common config
             loadFromClasspath("config/common.properties");
+            System.out.println(">>> Loaded base config: common.properties");
 
-            String env = System.getProperty("env");
-            if (env != null && !env.isBlank()) {
-                loadFromClasspathOptional(
-                        "config/" + env.toLowerCase() + ".properties"
-                );
-                System.out.println(">>> Loaded env config: " + env + ".properties");
-            } else {
-                System.out.println(">>> No env specified. Using base config only.");
-            }
+            // 2️⃣ Load env-specific config (default = local)
+            String env = System.getProperty("env", "local").toLowerCase();
+
+            loadFromClasspathOptional("config/" + env + ".properties");
+            System.out.println(">>> Loaded env config: " + env + ".properties");
 
         } catch (Exception e) {
             throw new RuntimeException("❌ Failed to load configuration", e);

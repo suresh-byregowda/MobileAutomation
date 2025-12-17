@@ -23,11 +23,9 @@ import java.util.Map;
 
 public class Hooks {
 
-    private static AppiumDriver driver;
-
     /* =======================================================
-   APPIUM SERVER LIFECYCLE (LOCAL ONLY, ONCE PER RUN)
-   ======================================================= */
+       APPIUM SERVER LIFECYCLE (LOCAL ONLY, ONCE PER RUN)
+       ======================================================= */
     @BeforeAll
     public static void beforeAll() {
         String runEnv = ConfigReader.getOrDefault("run_env", "local");
@@ -52,12 +50,13 @@ public class Hooks {
         ExtentTestManager.setTest(extent.createTest(scenario.getName()));
 
         DriverFactory.createDriver();
-        driver = DriverFactory.getDriver();
 
         ExtentTestManager.getTest()
                 .log(Status.INFO, "Starting Scenario: " + scenario.getName());
 
-        System.out.println("Global timeout (seconds): " + Timeouts.global().getSeconds());
+        System.out.println(
+                "Global timeout (seconds): " + Timeouts.global().getSeconds()
+        );
 
         startRecordingIfRequired();
     }
@@ -88,22 +87,30 @@ public class Hooks {
 
         String runEnv = ConfigReader.getOrDefault("run_env", "local");
         boolean record =
-                Boolean.parseBoolean(ConfigReader.getOrDefault("record_video", "false"));
+                Boolean.parseBoolean(
+                        ConfigReader.getOrDefault("record_video", "false")
+                );
 
         if (!"local".equalsIgnoreCase(runEnv) || !record) {
-            return; // 🚫 No recording
+            return;
         }
 
         try {
+            AppiumDriver driver = DriverFactory.getDriver();
+
             Map<String, Object> params = new HashMap<>();
             params.put("maxDurationSec", 1800);
             params.put("bitRate", 800000);
             params.put("videoType", "mp4");
             params.put("resolution", "720x1280");
 
-            driver.executeScript("mobile: startMediaProjectionRecording", params);
+            driver.executeScript(
+                    "mobile: startMediaProjectionRecording", params
+            );
         } catch (Exception e) {
-            System.out.println("⚠ Failed to start recording: " + e.getMessage());
+            System.out.println(
+                    "⚠ Failed to start recording: " + e.getMessage()
+            );
         }
     }
 
@@ -111,34 +118,49 @@ public class Hooks {
 
         String runEnv = ConfigReader.getOrDefault("run_env", "local");
         boolean record =
-                Boolean.parseBoolean(ConfigReader.getOrDefault("record_video", "false"));
+                Boolean.parseBoolean(
+                        ConfigReader.getOrDefault("record_video", "false")
+                );
 
         if (!"local".equalsIgnoreCase(runEnv) || !record) {
-            return; // 🚫 No recording
+            return;
         }
 
         try {
-            Object result = driver.executeScript("mobile: stopMediaProjectionRecording");
+            AppiumDriver driver = DriverFactory.getDriver();
+
+            Object result =
+                    driver.executeScript(
+                            "mobile: stopMediaProjectionRecording"
+                    );
+
             if (result == null) return;
 
             byte[] videoBytes =
                     Base64.getDecoder().decode(result.toString());
 
             String dir =
-                    ConfigReader.getOrDefault("recording_path", "test-output/videos");
+                    ConfigReader.getOrDefault(
+                            "recording_path", "test-output/videos"
+                    );
 
             Files.createDirectories(Paths.get(dir));
 
-            String safeName = sanitize(scenario.getName()) + ".mp4";
-            Path videoPath = Paths.get(dir, safeName);
+            String safeName =
+                    sanitize(scenario.getName())
+                            + "_" + System.currentTimeMillis()
+                            + ".mp4";
 
+            Path videoPath = Paths.get(dir, safeName);
             Files.write(videoPath, videoBytes);
 
             ExtentTestManager.getTest()
                     .log(Status.INFO, "Video saved: " + videoPath);
 
         } catch (Exception e) {
-            System.out.println("⚠ Failed to stop/save recording: " + e.getMessage());
+            System.out.println(
+                    "⚠ Failed to stop/save recording: " + e.getMessage()
+            );
         }
     }
 
@@ -147,10 +169,16 @@ public class Hooks {
        ======================================================= */
     private void attachFailureScreenshot() {
         try {
+            AppiumDriver driver = DriverFactory.getDriver();
+
             String base64 =
-                    ((TakesScreenshot) driver).getScreenshotAs(OutputType.BASE64);
+                    ((TakesScreenshot) driver)
+                            .getScreenshotAs(OutputType.BASE64);
+
             ExtentTestManager.getTest()
-                    .addScreenCaptureFromBase64String(base64, "Failure Screenshot");
+                    .addScreenCaptureFromBase64String(
+                            base64, "Failure Screenshot"
+                    );
         } catch (Exception ignored) {}
     }
 
@@ -161,10 +189,9 @@ public class Hooks {
         return name.replaceAll("[^a-zA-Z0-9._-]", "_");
     }
 
-    public static AppiumDriver getDriver() {
-        return driver;
-    }
-
+    /* =======================================================
+       APPium SERVER SHUTDOWN
+       ======================================================= */
     @AfterAll
     public static void afterAll() {
         String runEnv = ConfigReader.getOrDefault("run_env", "local");

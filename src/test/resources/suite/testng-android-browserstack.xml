@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Android BrowserStack Suite" parallel="false">
+
+    <!-- INITIAL RUN -->
+    <test name="Android BS Initial">
+        <parameter name="platform" value="android"/>
+        <classes>
+            <class name="runners.TestRunner"/>
+        </classes>
+    </test>
+
+</suite>

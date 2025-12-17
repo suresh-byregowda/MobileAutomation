@@ -244,3 +244,27 @@ test-output/extent-report.html
 This repository is designed to reflect real-world,  mobile automation standards — clean, secure, extensible, and production-ready.
 
 ---
+
+new notes
+
+How to run (examples)
+
+Android Local
+mvn clean test -Dallscreens=false -Dplatform=android -Denv=local -Drun_env=local -Dcucumber.filter.tags=@otg -Djasypt.password=MASTER_KEY -DsuiteXmlFile=src/test/resources/suite/testng-android-local.xml
+
+Retry
+mvn clean test -Dallscreens=false -Dplatform=android -Denv=local -Drun_env=local -Dcucumber.filter.tags=@otg -Djasypt.password=MASTER_KEY -DsuiteXmlFile=src/test/resources/suite/testng-retry.xml
+
+Android BrowserStack
+mvn clean test -Dallscreens=false -Dplatform=android -Denv=qa -Drun_env=browserstack -Dcucumber.filter.tags=@poc -Djasypt.password=MASTER_KEY -DsuiteXmlFile=src/test/resources/suite/testng-android-browserstack.xml
+
+Retry
+mvn clean test -Dallscreens=false -Dplatform=android -Denv=qa -Drun_env=browserstack -Dcucumber.filter.tags=@poc -Djasypt.password=MASTER_KEY -DsuiteXmlFile=src/test/resources/suite/testng-retry.xml
+
+iOS Local
+iOS BrowserStack
+
+
+target/
+ ├── failed_scenarios_android.txt
+ └── failed_scenarios_ios.txt
