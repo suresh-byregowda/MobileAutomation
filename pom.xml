@@ -160,21 +160,31 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire.version}</version>
+
                 <configuration>
+
+                    <!-- 🔴 REQUIRED for retry to work -->
+                    <testFailureIgnore>true</testFailureIgnore>
+
+                    <!-- 🔴 REQUIRED: tell Surefire which TestNG suite to run -->
+                    <suiteXmlFiles>
+                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
+                    </suiteXmlFiles>
+
                     <useSystemClassLoader>false</useSystemClassLoader>
 
                     <systemPropertyVariables>
                         <cucumber.filter.tags>${cucumber.filter.tags}</cucumber.filter.tags>
-                        <takeAllScreens>${takeAllScreens}</takeAllScreens>
-                        <recordAllVideos>${recordAllVideos}</recordAllVideos>
                         <platform>${platform}</platform>
+                        <allscreens>${allscreens}</allscreens>
+                        <record_video>${record_video}</record_video>
+                        <run_env>${run_env}</run_env>
+                        <env>${env}</env>
                     </systemPropertyVariables>
 
-         <!--           <suiteXmlFiles>
-                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
-                    </suiteXmlFiles>-->
                 </configuration>
             </plugin>
+
 
             <!-- ==========================
                  REMOVED COMPLETELY:

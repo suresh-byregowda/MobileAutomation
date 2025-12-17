@@ -3,6 +3,7 @@ package listeners;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
+import utils.ConfigReader;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,9 +39,11 @@ public class ExtentManager {
         // ============================
         // HTML REPORTER
         // ============================
-        ExtentSparkReporter htmlReporter = new ExtentSparkReporter(HTML_REPORT);
+        ExtentSparkReporter htmlReporter =
+                new ExtentSparkReporter(HTML_REPORT);
+
         htmlReporter.config().setDocumentTitle("Automation Test Report");
-        htmlReporter.config().setReportName("PocAndroid Test Execution");
+        htmlReporter.config().setReportName("Mobile Automation Execution");
         htmlReporter.config().setTheme(Theme.STANDARD);
 
         // ============================
@@ -50,11 +53,26 @@ public class ExtentManager {
         extent.attachReporter(htmlReporter);
 
         // ============================
-        // META / SYSTEM INFO
+        // SYSTEM INFO (FIXED)
         // ============================
         extent.setSystemInfo("OS", System.getProperty("os.name"));
         extent.setSystemInfo("User", System.getProperty("user.name"));
         extent.setSystemInfo("Java Version", System.getProperty("java.version"));
-        extent.setSystemInfo("Platform", System.getProperty("platform", "Android"));
+
+        // ✅ Correct sources
+        extent.setSystemInfo(
+                "Platform",
+                ConfigReader.getOrDefault("platform", "unknown")
+        );
+
+        extent.setSystemInfo(
+                "Execution Mode",
+                ConfigReader.getOrDefault("run_env", "local")
+        );
+
+        extent.setSystemInfo(
+                "Environment",
+                System.getProperty("env", "local")
+        );
     }
 }

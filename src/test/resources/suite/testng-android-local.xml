@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Android Mobile Suite" parallel="tests" thread-count="2">
+
+    <!-- INITIAL RUN (PARALLEL) -->
+    <test name="Android Initial Run">
+        <parameter name="platform" value="android"/>
+        <classes>
+            <class name="runners.TestRunner"/>
+        </classes>
+    </test>
+
+</suite>

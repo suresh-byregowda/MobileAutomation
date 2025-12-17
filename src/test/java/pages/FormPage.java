@@ -1,8 +1,10 @@
 package pages;
 
 import base.BasePage;
+import factory.DriverFactory;
 import hooks.Hooks;
 import io.appium.java_client.AppiumBy;
+import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import utils.LocatorLogic;
@@ -15,15 +17,16 @@ public class FormPage extends BasePage {
     private final LocatorLogic locator;
 
     public FormPage() {
-        super(Hooks.getDriver());
-        this.locator = new LocatorLogic(Hooks.getDriver());
+        super(DriverFactory.getDriver());
+        AppiumDriver driver = DriverFactory.getDriver();
+        this.locator = new LocatorLogic(driver);
     }
 
     /* ============================================================
                      WAIT FOR FORM READY
        ============================================================ */
     public void waitForFormReady() {
-        perform("Wait for Form Page Ready", () -> locator.one_ele(FormPageKey.NAME_FIELD));
+        perform("Wait for Form Page Ready", () -> locator.one_ele(FormPageKey.NAME_FIELD),true);
     }
 
     /* ============================================================
@@ -85,7 +88,7 @@ public class FormPage extends BasePage {
                     driver.findElement(AppiumBy.iOSClassChain(iosChain)).click();
                 }
             }
-        });
+        },true);
     }
 
     /* ============================================================

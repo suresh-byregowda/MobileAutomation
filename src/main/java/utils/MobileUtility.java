@@ -1,5 +1,6 @@
 package utils;
 
+import factory.DriverFactory;
 import hooks.Hooks;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
@@ -25,7 +26,7 @@ public final class MobileUtility {
                      DRIVER + JS HELPERS
        ======================================================= */
     public static AppiumDriver driver() {
-        return Hooks.getDriver();
+        return DriverFactory.getDriver();
     }
 
     private static JavascriptExecutor js() {
@@ -477,7 +478,7 @@ public final class MobileUtility {
         }
 
         try {
-            AppiumDriver driver = Hooks.getDriver();
+            AppiumDriver driver = DriverFactory.getDriver();
 
             String[] androidIDs = {
                     "com.android.permissioncontroller:id/permission_allow_button",

@@ -1,7 +1,9 @@
 package pages.otg;
 
 import base.BasePage;
+import factory.DriverFactory;
 import hooks.Hooks;
+import io.appium.java_client.AppiumDriver;
 import utils.LocatorLogic;
 import utils.keys.OnTheGoKey;
 
@@ -10,8 +12,9 @@ public class OtgProjectPage extends BasePage {
     private final LocatorLogic locator;
 
     public OtgProjectPage() {
-        super(Hooks.getDriver());
-        this.locator = new LocatorLogic(Hooks.getDriver());
+        super(DriverFactory.getDriver());
+        AppiumDriver driver = DriverFactory.getDriver();
+        this.locator = new LocatorLogic(driver);
     }
 
     public void verifyCurrentAllocation() {

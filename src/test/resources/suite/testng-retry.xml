@@ -1,0 +1,7 @@
+<suite name="Retry Execution" parallel="false">
+    <test name="Retry Run">
+        <classes>
+            <class name="runners.RetryRunner"/>
+        </classes>
+    </test>
+</suite>
