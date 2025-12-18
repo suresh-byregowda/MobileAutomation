@@ -3,6 +3,7 @@ package base;
 import com.aventstack.extentreports.MediaEntityBuilder;
 import com.aventstack.extentreports.Status;
 import listeners.ExtentTestManager;
+import utils.ConfigReader;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
@@ -17,6 +18,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.Callable;
 
 public abstract class BasePage {
 
@@ -25,50 +27,93 @@ public abstract class BasePage {
     private static final DateTimeFormatter TS_FORMAT =
             DateTimeFormatter.ofPattern("HH:mm:ss");
 
+    // Read once (cheap + safe)
+    private static final boolean ALL_SCREENS =
+            Boolean.parseBoolean(
+                    ConfigReader.getOrDefault("allscreens", "false")
+            );
+
     protected BasePage(AppiumDriver driver) {
         if (driver == null)
-            throw new IllegalStateException("Driver is NULL! Ensure driver is initialized before using page objects.");
+            throw new IllegalStateException(
+                    "Driver is NULL! Ensure driver is initialized before using page objects."
+            );
         this.driver = driver;
-        PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
+        PageFactory.initElements(
+                new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this
+        );
     }
 
-    // High-level step wrapper that logs and attaches screenshot under the same step
+    /* =======================================================
+       STEP EXECUTION (NO FORCED SCREENSHOT)
+       ======================================================= */
     public void perform(String action, Runnable runnable) {
+        perform(action, runnable, false);
+    }
+
+    public void perform(String action, Runnable runnable, boolean forceScreenshot) {
         String label = action + " [" + timestamp() + "]";
 
-        // Log the step (creates the row in Extent)
-        try {
-            ExtentTestManager.getTest().log(Status.INFO, label);
-        } catch (Exception ignored) {}
-
-        // Execute step
+        logInfo(label);
         runnable.run();
 
-        // Attach screenshot to the same step (media attached to the most recent log)
-        attachScreenshotUnderStep(label);
+        maybeAttachScreenshot(label, forceScreenshot);
     }
 
-    protected <T> T perform(String action, java.util.concurrent.Callable<T> callable) {
+    protected <T> T perform(String action, Callable<T> callable) {
+        return perform(action, callable, false);
+    }
+
+    protected <T> T perform(String action, Callable<T> callable, boolean forceScreenshot) {
         String label = action + " [" + timestamp() + "]";
 
-        try {
-            ExtentTestManager.getTest().log(Status.INFO, label);
-        } catch (Exception ignored) {}
+        logInfo(label);
 
         try {
             T result = callable.call();
-            attachScreenshotUnderStep(label);
+            maybeAttachScreenshot(label, forceScreenshot);
             return result;
         } catch (Exception e) {
-            try {
-                ExtentTestManager.getTest().log(Status.FAIL, "Error during: " + action + " → " + e.getMessage());
-            } catch (Exception ignored) {}
-            attachScreenshotUnderStep("FAILED: " + label);
+            logFail("Error during: " + action + " → " + e.getMessage());
+            attachScreenshot(label + " (FAILED)");
             throw new RuntimeException(e);
         }
     }
 
-    // Wait helpers
+    /* =======================================================
+       SCREENSHOT CONTROL
+       ======================================================= */
+    private void maybeAttachScreenshot(String label, boolean force) {
+        if (ALL_SCREENS || force) {
+            attachScreenshot(label);
+        }
+    }
+
+    protected void attachScreenshot(String label) {
+        try {
+            if (ExtentTestManager.getTest() == null) return;
+
+            String base64 =
+                    ((TakesScreenshot) driver)
+                            .getScreenshotAs(OutputType.BASE64);
+
+            ExtentTestManager.getTest().info(
+                    "Screenshot: " + label,
+                    MediaEntityBuilder
+                            .createScreenCaptureFromBase64String(base64, label)
+                            .build()
+            );
+        } catch (Exception ex) {
+            try {
+                ExtentTestManager.getTest()
+                        .warning("Failed to capture screenshot: " + ex.getMessage());
+            } catch (Exception ignored) {}
+        }
+    }
+
+    /* =======================================================
+       WAIT HELPERS
+       ======================================================= */
     protected void waitForVisible(WebElement element, int seconds) {
         new WebDriverWait(driver, Duration.ofSeconds(seconds))
                 .until(ExpectedConditions.visibilityOf(element));
@@ -78,48 +123,49 @@ public abstract class BasePage {
         waitForVisible(element, 20);
     }
 
-    // Attach screenshot under the most recent step log using MediaEntityBuilder
-    protected void attachScreenshotUnderStep(String label) {
-        try {
-            String base64 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BASE64);
-            if (ExtentTestManager.getTest() != null) {
-                ExtentTestManager.getTest().info(
-                        "Screenshot: " + label,
-                        MediaEntityBuilder.createScreenCaptureFromBase64String(base64, label).build()
-                );
-            }
-        } catch (Exception ex) {
-            try { ExtentTestManager.getTest().warning("Failed to capture screenshot: " + ex.getMessage()); } catch (Exception ignored) {}
-        }
-    }
-
-    // Action helpers
+    /* =======================================================
+       ACTION HELPERS
+       ======================================================= */
     protected void click(WebElement element, String msg) {
         perform(msg, element::click);
+    }
+
+    protected void clickWithScreenshot(WebElement element, String msg) {
+        perform(msg, element::click, true);
     }
 
     protected void type(WebElement element, String text, String msg) {
         perform(msg, () -> element.sendKeys(text));
     }
 
+    protected void typeWithScreenshot(WebElement element, String text, String msg) {
+        perform(msg, () -> element.sendKeys(text), true);
+    }
+
     protected String get(WebElement element, String msg) {
         return perform(msg, element::getText);
     }
 
-    // Logging helpers (safe)
-    protected void log(String message) {
-        try { ExtentTestManager.getTest().log(Status.INFO, message); } catch (Exception ignored) {}
+    /* =======================================================
+       LOGGING HELPERS
+       ======================================================= */
+    protected void logInfo(String message) {
+        try {
+            ExtentTestManager.getTest()
+                    .log(Status.INFO, message);
+        } catch (Exception ignored) {}
     }
 
-    protected void fail(String message) {
-        try { ExtentTestManager.getTest().log(Status.FAIL, message); } catch (Exception ignored) {}
+    protected void logFail(String message) {
+        try {
+            ExtentTestManager.getTest()
+                    .log(Status.FAIL, message);
+        } catch (Exception ignored) {}
     }
 
-    private String timestamp() {
-        return LocalDateTime.now().format(TS_FORMAT);
-    }
-
-    // Platform helpers
+    /* =======================================================
+       PLATFORM HELPERS
+       ======================================================= */
     protected String platformName() {
         Object o = driver.getCapabilities().getCapability("platformName");
         return o == null ? "" : o.toString().toLowerCase();
@@ -127,4 +173,8 @@ public abstract class BasePage {
 
     protected boolean isAndroid() { return platformName().contains("android"); }
     protected boolean isIOS() { return platformName().contains("ios"); }
+
+    private String timestamp() {
+        return LocalDateTime.now().format(TS_FORMAT);
+    }
 }

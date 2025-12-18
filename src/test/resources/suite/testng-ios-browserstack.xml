@@ -1,0 +1,34 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="iOS BrowserStack Suite" parallel="false">
+
+    <!-- INITIAL RUN -->
+    <test name="iOS BS Initial">
+        <parameter name="platform" value="ios"/>
+        <classes>
+            <class name="runners.TestRunner"/>
+        </classes>
+    </test>
+
+    <!-- RETRIES -->
+    <test name="iOS BS Retry-1">
+        <parameter name="platform" value="ios"/>
+        <classes>
+            <class name="runners.RetryRunner"/>
+        </classes>
+    </test>
+
+    <test name="iOS BS Retry-2">
+        <parameter name="platform" value="ios"/>
+        <classes>
+            <class name="runners.RetryRunner"/>
+        </classes>
+    </test>
+
+    <test name="iOS BS Retry-3">
+        <parameter name="platform" value="ios"/>
+        <classes>
+            <class name="runners.RetryRunner"/>
+        </classes>
+    </test>
+
+</suite>

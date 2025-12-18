@@ -13,12 +13,14 @@ import org.testng.annotations.Listeners;
         plugin = {
                 "pretty",
                 "json:target/cucumber.json",
-                "html:target/cucumber-html-report"
+                "html:target/cucumber-html-report",
+                "rerun:target/failed_scenarios.txt"
         },
         monochrome = true
 )
 public class TestRunner extends AbstractTestNGCucumberTests {
 
+    // DO NOT try to make this dynamic
     @Override
     @DataProvider(parallel = false)
     public Object[][] scenarios() {

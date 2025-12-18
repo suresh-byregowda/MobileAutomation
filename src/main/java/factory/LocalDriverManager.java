@@ -13,16 +13,16 @@ import utils.JsonCapabilityLoader;
 import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.Duration;
 
 public class LocalDriverManager {
 
     /* =======================================================
-       CREATE LOCAL DRIVER (APPIUM 3 + SERVER MANAGER SAFE)
+       CREATE LOCAL DRIVER
        ======================================================= */
     public static AppiumDriver createLocalDriver() throws Exception {
 
         String runEnv = ConfigReader.getOrDefault("run_env", "local");
-
         if (!"local".equalsIgnoreCase(runEnv)) {
             throw new RuntimeException(
                     "❌ LocalDriverManager must NOT be used for run_env=" + runEnv
@@ -34,12 +34,7 @@ public class LocalDriverManager {
                 "http://127.0.0.1:4723"
         );
 
-        // ✅ OPTIONAL server start (only if manager exists & enabled)
-        startAppiumIfManagerPresent();
-
-        // ✅ Always validate connectivity
         verifyAppiumServerIsRunning(serverUrl);
-
         System.out.println(">>> Connecting to Appium Server: " + serverUrl);
 
         String platform =
@@ -48,36 +43,38 @@ public class LocalDriverManager {
         /* ===================================================
            ANDROID
            =================================================== */
-        if (platform.contains("android")) {
+        if ("android".equals(platform)) {
 
             UiAutomator2Options options = new UiAutomator2Options();
 
-            // 1️⃣ JSON caps
             JsonNode androidCaps =
                     JsonCapabilityLoader.getPlatformCaps("android");
             CapabilityApplier.applyAndroidCaps(options, androidCaps);
 
-            // 2️⃣ Runtime-only
             options.setPlatformName("Android");
             options.setAutomationName("UiAutomator2");
             options.setDeviceName(ConfigReader.get("device_name"));
             options.setAppPackage(ConfigReader.get("app_package"));
             options.setAppActivity(ConfigReader.get("app_activity"));
-
             options.setDisableWindowAnimation(true);
-
             options.setAutoGrantPermissions(true);
 
-            // 3️⃣ Chromedriver (cross-platform safe)
             applyChromedriverIfPresent(options);
 
-            return new AndroidDriver(new URL(serverUrl), options);
+            AppiumDriver driver =
+                    new AndroidDriver(new URL(serverUrl), options);
+
+            driver.manage()
+                    .timeouts()
+                    .implicitlyWait(Duration.ofSeconds(5));
+
+            return driver;
         }
 
         /* ===================================================
            IOS
            =================================================== */
-        if (platform.contains("ios")) {
+        if ("ios".equals(platform)) {
 
             XCUITestOptions options = new XCUITestOptions();
 
@@ -102,37 +99,17 @@ public class LocalDriverManager {
                 options.setApp(appPath);
             }
 
-            return new IOSDriver(new URL(serverUrl), options);
+            AppiumDriver driver =
+                    new IOSDriver(new URL(serverUrl), options);
+
+            driver.manage()
+                    .timeouts()
+                    .implicitlyWait(Duration.ofSeconds(5));
+
+            return driver;
         }
 
         throw new RuntimeException("❌ Invalid platform in config: " + platform);
-    }
-
-    /* =======================================================
-       OPTIONAL APPIUM SERVER START
-       ======================================================= */
-    private static void startAppiumIfManagerPresent() {
-        try {
-            Class<?> mgr = Class.forName("factory.AppiumServerManager");
-
-            Boolean autoStart =
-                    Boolean.parseBoolean(
-                            ConfigReader.getOrDefault(
-                                    "appium_autostart", "false"
-                            )
-                    );
-
-            if (autoStart) {
-                mgr.getMethod("startServerIfRequired").invoke(null);
-            }
-
-        } catch (ClassNotFoundException ignored) {
-            // AppiumServerManager not used → manual start mode
-        } catch (Exception e) {
-            throw new RuntimeException(
-                    "❌ Failed to start Appium via AppiumServerManager", e
-            );
-        }
     }
 
     /* =======================================================
@@ -141,26 +118,22 @@ public class LocalDriverManager {
     private static void applyChromedriverIfPresent(
             UiAutomator2Options options
     ) {
+        String basePath = ConfigReader.get("chromedriver_base_path");
+        if (basePath == null || basePath.isBlank()) return;
 
-        String chromeDriverPath =
-                ConfigReader.get("chromedriver_executable");
+        String os = detectOSFolder();
+        String driverName =
+                os.equals("win") ? "chromedriver.exe" : "chromedriver";
 
-        if (chromeDriverPath == null || chromeDriverPath.isBlank()) {
-            return;
-        }
-
-        File chromeDriver = new File(chromeDriverPath);
-        if (!chromeDriver.isAbsolute()) {
-            chromeDriver = new File(
-                    System.getProperty("user.dir"),
-                    chromeDriverPath
-            );
-        }
+        File chromeDriver = new File(
+                System.getProperty("user.dir"),
+                basePath + File.separator + os + File.separator + driverName
+        );
 
         if (!chromeDriver.exists()) {
             throw new RuntimeException(
-                    "❌ Chromedriver not found at: " +
-                            chromeDriver.getAbsolutePath()
+                    "❌ Chromedriver not found for OS [" + os + "] at: "
+                            + chromeDriver.getAbsolutePath()
             );
         }
 
@@ -169,24 +142,32 @@ public class LocalDriverManager {
         );
     }
 
+    private static String detectOSFolder() {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")) return "win";
+        if (os.contains("mac")) return "mac";
+        if (os.contains("nux") || os.contains("linux")) return "linux";
+        throw new RuntimeException("Unsupported OS: " + os);
+    }
+
     /* =======================================================
        APPIUM HEALTH CHECK
        ======================================================= */
     private static void verifyAppiumServerIsRunning(String serverUrl) {
         try {
             URL status = new URL(serverUrl + "/status");
-            HttpURLConnection connection =
+            HttpURLConnection conn =
                     (HttpURLConnection) status.openConnection();
-            connection.setConnectTimeout(3000);
-            connection.connect();
+            conn.setConnectTimeout(3000);
+            conn.connect();
 
-            if (connection.getResponseCode() != 200) {
+            if (conn.getResponseCode() != 200) {
                 throw new RuntimeException();
             }
         } catch (Exception e) {
             throw new RuntimeException(
                     "❌ Appium server is NOT reachable at " + serverUrl +
-                            "\n➡ Start it manually or enable appium_autostart=true"
+                            "\n➡ Start it manually or via AppiumServerManager"
             );
         }
     }

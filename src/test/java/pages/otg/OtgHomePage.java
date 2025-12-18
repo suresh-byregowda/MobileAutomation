@@ -1,7 +1,9 @@
 package pages.otg;
 
 import base.BasePage;
+import factory.DriverFactory;
 import hooks.Hooks;
+import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.WebElement;
 import utils.LocatorLogic;
 import utils.MobileUtility;
@@ -15,8 +17,9 @@ public class OtgHomePage extends BasePage {
     private final LocatorLogic locator;
 
     public OtgHomePage() {
-        super(Hooks.getDriver());
-        this.locator = new LocatorLogic(Hooks.getDriver());
+        super(DriverFactory.getDriver());
+        AppiumDriver driver = DriverFactory.getDriver();
+        this.locator = new LocatorLogic(driver);
     }
 
     // -------------------------------------------------------------------

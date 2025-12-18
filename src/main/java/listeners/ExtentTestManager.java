@@ -1,38 +1,27 @@
 package listeners;
 
-
 import com.aventstack.extentreports.ExtentTest;
 
-
-import java.util.HashMap;
-import java.util.Map;
-
-
 /**
- * Thread-safe test manager for ExtentTest instances.
+ * Thread-safe manager for ExtentTest instances.
+ * One ExtentTest per thread.
  */
-public class ExtentTestManager {
-    private static ThreadLocal<ExtentTest> extentTest = new ThreadLocal<>();
-    private static Map<Long, ExtentTest> allTests = new HashMap<>();
+public final class ExtentTestManager {
 
+    private static final ThreadLocal<ExtentTest> EXTENT_TEST =
+            new ThreadLocal<>();
 
-    public synchronized static ExtentTest getTest() {
-        return extentTest.get();
+    private ExtentTestManager() {}
+
+    public static ExtentTest getTest() {
+        return EXTENT_TEST.get();
     }
 
-
-    public synchronized static void setTest(ExtentTest test) {
-        extentTest.set(test);
-        allTests.put(Thread.currentThread().getId(), test);
+    public static void setTest(ExtentTest test) {
+        EXTENT_TEST.set(test);
     }
 
-
-    public synchronized static void unload() {
-        extentTest.remove();
-    }
-
-
-    public synchronized static Map<Long, ExtentTest> getAllTests() {
-        return allTests;
+    public static void unload() {
+        EXTENT_TEST.remove();
     }
 }

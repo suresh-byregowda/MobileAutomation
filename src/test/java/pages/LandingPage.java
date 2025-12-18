@@ -1,8 +1,10 @@
 package pages;
 
 import base.BasePage;
+import factory.DriverFactory;
 import hooks.Hooks;
 import io.appium.java_client.AppiumBy;
+import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import utils.LocatorLogic;
@@ -13,8 +15,9 @@ public class LandingPage extends BasePage {
     private final LocatorLogic locator;
 
     public LandingPage() {
-        super(Hooks.getDriver());
-        this.locator = new LocatorLogic(Hooks.getDriver());
+        super(DriverFactory.getDriver());
+        AppiumDriver driver = DriverFactory.getDriver();
+        this.locator = new LocatorLogic(driver);
     }
 
     /* ===================== ACTIONS ===================== */

@@ -1,7 +1,6 @@
 package utils;
 
-import base.BasePage;
-import hooks.Hooks;
+import factory.DriverFactory;
 import listeners.ExtentTestManager;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
@@ -26,10 +25,13 @@ public final class ScreenshotUtil {
     // =======================================
     public static String getBase64() {
         try {
-            return ((TakesScreenshot) Hooks.getDriver())
+            return ((TakesScreenshot) DriverFactory.getDriver())
                     .getScreenshotAs(OutputType.BASE64);
         } catch (Exception e) {
-            ExtentTestManager.getTest().warning("Screenshot (base64) failed: " + e.getMessage());
+            try {
+                ExtentTestManager.getTest()
+                        .warning("Screenshot (base64) failed: " + e.getMessage());
+            } catch (Exception ignored) {}
             return null;
         }
     }
@@ -39,12 +41,15 @@ public final class ScreenshotUtil {
     // =======================================
     public static String saveScreenshot(String name) {
         try {
-            File srcFile = ((TakesScreenshot) Hooks.getDriver())
-                    .getScreenshotAs(OutputType.FILE);
+            File srcFile =
+                    ((TakesScreenshot) DriverFactory.getDriver())
+                            .getScreenshotAs(OutputType.FILE);
 
-            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String timestamp =
+                    new SimpleDateFormat("yyyyMMdd_HHmmss")
+                            .format(new Date());
+
             String dir = "test-output/screenshots/";
-
             File folder = new File(dir);
             if (!folder.exists()) folder.mkdirs();
 
@@ -55,7 +60,10 @@ public final class ScreenshotUtil {
             return destFile.getAbsolutePath();
 
         } catch (Exception e) {
-            ExtentTestManager.getTest().warning("Screenshot save failed: " + e.getMessage());
+            try {
+                ExtentTestManager.getTest()
+                        .warning("Screenshot save failed: " + e.getMessage());
+            } catch (Exception ignored) {}
             return null;
         }
     }
@@ -66,12 +74,15 @@ public final class ScreenshotUtil {
     public static void attachScreenshotToExtent(String label) {
         try {
             String base64 = getBase64();
-            if (base64 != null) {
+            if (base64 != null && ExtentTestManager.getTest() != null) {
                 ExtentTestManager.getTest()
                         .addScreenCaptureFromBase64String(base64, label);
             }
         } catch (Exception e) {
-            ExtentTestManager.getTest().warning("Attach screenshot failed: " + e.getMessage());
+            try {
+                ExtentTestManager.getTest()
+                        .warning("Attach screenshot failed: " + e.getMessage());
+            } catch (Exception ignored) {}
         }
     }
 

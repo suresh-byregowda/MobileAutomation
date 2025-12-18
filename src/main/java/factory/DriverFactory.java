@@ -5,28 +5,28 @@ import utils.ConfigReader;
 
 public final class DriverFactory {
 
-    private static AppiumDriver driver;
+    private static final ThreadLocal<AppiumDriver> DRIVER =
+            new ThreadLocal<>();
 
     private DriverFactory() {}
 
     /* =======================================================
        CREATE DRIVER (LOCAL / BROWSERSTACK)
        ======================================================= */
-    public static synchronized void createDriver() throws Exception {
+    public static void createDriver() throws Exception {
 
-        if (driver != null) {
-            System.out.println(">>> Driver already created. Reusing existing instance.");
+        if (DRIVER.get() != null) {
+            System.out.println(">>> Driver already exists for this thread.");
             return;
         }
 
-        // Test environment (qa / uat / staging)
-        String testEnv = ConfigReader.getOrDefault("env", "qa").toLowerCase();
-
         // Execution environment (local / browserstack)
-        String runEnv = ConfigReader.getOrDefault("run_env", "local").toLowerCase();
+        String runEnv =
+                ConfigReader.getOrDefault("run_env", "local").toLowerCase();
 
-        System.out.println(">>> Test Environment  : " + testEnv);
         System.out.println(">>> Execution Mode   : " + runEnv);
+
+        AppiumDriver driver;
 
         switch (runEnv) {
 
@@ -44,15 +44,19 @@ public final class DriverFactory {
                                 " (allowed values: local | browserstack)"
                 );
         }
+
+        DRIVER.set(driver);
     }
 
     /* =======================================================
        GET DRIVER
        ======================================================= */
     public static AppiumDriver getDriver() {
+        AppiumDriver driver = DRIVER.get();
+
         if (driver == null) {
             throw new RuntimeException(
-                    "❌ Driver not initialized. Call DriverFactory.createDriver() first."
+                    "❌ Driver not initialized for this thread."
             );
         }
         return driver;
@@ -61,14 +65,17 @@ public final class DriverFactory {
     /* =======================================================
        QUIT DRIVER
        ======================================================= */
-    public static synchronized void quitDriver() {
+    public static void quitDriver() {
+
+        AppiumDriver driver = DRIVER.get();
+
         if (driver != null) {
             try {
                 driver.quit();
             } catch (Exception ignored) {}
             finally {
-                driver = null;
-                System.out.println(">>> Driver quit successfully.");
+                DRIVER.remove();
+                System.out.println(">>> Driver quit for thread.");
             }
         }
     }

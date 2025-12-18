@@ -18,16 +18,10 @@ public final class BrowserStackDriverManager {
 
         System.out.println(">>> Starting BrowserStack Driver");
 
-        // ---------------------------------------------------
-        // Load BrowserStack capabilities (CLASSPATH SAFE)
-        // ---------------------------------------------------
         JSONObject json = ConfigReader.loadJsonFromClasspath(
                 "capabilities/browserstack.json"
         );
 
-        // ---------------------------------------------------
-        // Credentials (Jasypt decrypted inside ConfigReader)
-        // ---------------------------------------------------
         String user = ConfigReader.get("browserstack.username");
         String key  = ConfigReader.get("browserstack.accessKey");
 
@@ -44,16 +38,13 @@ public final class BrowserStackDriverManager {
                 ">>> Connecting to BrowserStack as user: " + mask(user)
         );
 
-        // ---------------------------------------------------
-        // Platform selection
-        // ---------------------------------------------------
-        String platform = ConfigReader
-                .getOrDefault("platform", "android")
-                .toLowerCase();
+        String platform =
+                ConfigReader.getOrDefault("platform", "android").toLowerCase();
 
-        JSONObject capsJson = platform.equals("android")
-                ? (JSONObject) json.get("androidCapabilities")
-                : (JSONObject) json.get("iosCapabilities");
+        JSONObject capsJson =
+                "android".equals(platform)
+                        ? (JSONObject) json.get("androidCapabilities")
+                        : (JSONObject) json.get("iosCapabilities");
 
         if (capsJson == null) {
             throw new RuntimeException(
@@ -64,9 +55,6 @@ public final class BrowserStackDriverManager {
         DesiredCapabilities caps = new DesiredCapabilities();
         capsJson.forEach((k, v) -> caps.setCapability(k.toString(), v));
 
-        // ---------------------------------------------------
-        // Environment-specific injection
-        // ---------------------------------------------------
         String bsApp = ConfigReader.get("bs_app");
         if (isEmpty(bsApp)) {
             throw new RuntimeException("❌ bs_app is missing in env config");
@@ -78,24 +66,22 @@ public final class BrowserStackDriverManager {
                 System.getProperty("testName", "Mobile Automation Test")
         );
 
-        // ---------------------------------------------------
-        // HARD GUARD — NEVER SET LOCAL PATHS ON BROWSERSTACK
-        // ---------------------------------------------------
+        // HARD GUARD
         if (caps.asMap().containsKey("appium:chromedriverExecutable")) {
             throw new RuntimeException(
                     "❌ chromedriverExecutable must NOT be set for BrowserStack"
             );
         }
 
-        // ---------------------------------------------------
-        // Driver creation
-        // ---------------------------------------------------
         AppiumDriver driver =
-                platform.equals("android")
+                "android".equals(platform)
                         ? new AndroidDriver(new URL(remoteUrl), caps)
                         : new IOSDriver(new URL(remoteUrl), caps);
 
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.manage()
+                .timeouts()
+                .implicitlyWait(Duration.ofSeconds(5));
+
         return driver;
     }
 
