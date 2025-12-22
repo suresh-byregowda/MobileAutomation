@@ -220,6 +220,75 @@ test-output/extent-report.html
 
 ---
 
+# Write Script Using BDD Usage Examples
+
+## 📘 Overview
+This document explains how to manage test data effectively using **BDD Usage Examples** (`Scenario Outline` + `Examples`) in mobile automation testing.
+Poor test data management often results in duplicated scenarios, hard-coded values, flaky tests, and high maintenance effort. BDD Usage Examples provide a **structured, readable, and maintainable approach** to handle test data while keeping scenarios aligned with business behavior.
+This approach is especially useful for **mobile automation projects using Appium and Cucumber**.
+---
+
+## 🎯 Purpose
+
+The purpose of this document is to:
+
+- Demonstrate how BDD Usage Examples can be used for test data management
+- Eliminate hard-coded test data from automation code
+- Improve test readability for business stakeholders
+- Scale test coverage without duplicating scenarios
+- Promote clean and maintainable BDD feature files
+
+---
+
+## 🧩 Role of BDD Usage Examples in Test Data Management
+
+BDD Usage Examples help by:
+
+- Centralizing test data inside `Examples` tables
+- Separating behavior from data
+- Supporting positive, negative, and edge-case scenarios
+- Improving collaboration between QA, Dev, and Business teams
+
+> In BDD, **Examples act as a lightweight test data repository** at the feature-file level.
+---
+
+## 🧪 Basic Test BDD Example
+
+```gherkin
+Scenario Outline: Login validation
+  Given user is on login screen
+  When user logs in with "<username>" and "<password>"
+  Then login result should be "<result>"
+
+Examples:
+  | username | password | result  |
+  | valid1  | pass123  | success |
+  | invalid | wrong    | failure |
+
+```Stepdefination_File
+When user logs in with "<username>" and "<password>"
+
+  @When("user logs in with \"(.*)\" and \"(.*)\"")
+  public void login(String user, String pass) {
+      loginPage.login(user, pass);
+  }
+
+# Result
+- Test data controlled from feature files
+- Reusable step definitions
+- Easier updates when data changes
+
+# When test coverage grows, Examples allow scaling test data without increasing scenario count.
+
+Examples:
+| username | password | result |
+| user1 | pass123 | success |
+| user2 | pass123 | success |
+| user3 | wrong | failure |
+| user4 | empty | failure |
+
+
+
 # 🚀 Recommended Workflow
 
 1. Clone repo
