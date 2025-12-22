@@ -1,9 +1,13 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Android BrowserStack Suite" parallel="false">
+<suite name="Android BrowserStack Parallel Suite"
+       parallel="methods"
+       thread-count="5">
 
-    <!-- INITIAL RUN -->
-    <test name="Android BS Initial">
-        <parameter name="platform" value="android"/>
+    <listeners>
+        <listener class-name="listeners.DeviceExecutionSummaryListener"/>
+    </listeners>
+
+    <test name="Android Scenario Parallel Execution">
         <classes>
             <class name="runners.TestRunner"/>
         </classes>

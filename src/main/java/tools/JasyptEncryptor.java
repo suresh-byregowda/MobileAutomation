@@ -9,7 +9,10 @@ public class JasyptEncryptor {
         enc.setAlgorithm("PBEWithMD5AndDES");
         enc.setPassword("MASTER_KEY");
 
-        System.out.println(enc.encrypt("sachin.ashok@brillio.com"));
+        System.out.println(enc.encrypt("bs://4a9fd49cebb2149eeb1c5c662c5a9402566e14f9"));
+
+        // U9VYZWspVTsnZGoWjzZa
+        // bs://4a9fd49cebb2149eeb1c5c662c5a9402566e14f9
 
     }
 }
