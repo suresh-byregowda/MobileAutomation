@@ -10,19 +10,26 @@ import org.testng.annotations.Listeners;
 @CucumberOptions(
         features = "src/test/resources/features",
         glue = {"hooks", "steps"},
+        tags = "@general",
+        monochrome = true,
         plugin = {
                 "pretty",
-                "json:target/cucumber.json",
+                "summary",
                 "html:target/cucumber-html-report",
+                "json:target/cucumber.json",
                 "rerun:target/failed_scenarios.txt"
-        },
-        monochrome = true
+        }
 )
 public class TestRunner extends AbstractTestNGCucumberTests {
 
-    // DO NOT try to make this dynamic
+    /**
+     * ✅ KEY POINT:
+     * - Scenario parallelism handled by TestNG
+     * - Device parallelism handled by DevicePool
+     * - DO NOT use @Factory here
+     */
     @Override
-    @DataProvider(parallel = false)
+    @DataProvider(parallel = true)
     public Object[][] scenarios() {
         return super.scenarios();
     }

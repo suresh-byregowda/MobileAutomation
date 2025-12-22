@@ -4,68 +4,101 @@ import factory.AppiumServerManager;
 import factory.DriverFactory;
 import listeners.ExtentManager;
 import listeners.ExtentTestManager;
+
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.Status;
 
 import io.appium.java_client.AppiumDriver;
 import io.cucumber.java.*;
+
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
-import utils.ConfigReader;
-import utils.Timeouts;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
+import utils.ConfigReader;
+import utils.DeviceContext;
+import utils.DevicePool;
+import models.DeviceConfig;
 
 public class Hooks {
 
     /* =======================================================
-       APPIUM SERVER LIFECYCLE (LOCAL ONLY, ONCE PER RUN)
+       APPIUM SERVER LIFECYCLE (LOCAL ONLY)
        ======================================================= */
     @BeforeAll
     public static void beforeAll() {
-        String runEnv = ConfigReader.getOrDefault("run_env", "local");
-
-        if (!"local".equalsIgnoreCase(runEnv)) {
+        if (!ConfigReader.isLocal()) {
             System.out.println(
-                    ">>> run_env=" + runEnv + " → Skipping Appium server startup"
+                    ">>> run_env=browserstack → Skipping Appium server startup"
             );
             return;
         }
-
         AppiumServerManager.startServerIfRequired();
     }
 
     /* =======================================================
-       BEFORE SCENARIO
+       BEFORE SCENARIO → ACQUIRE DEVICE
        ======================================================= */
     @Before
     public void beforeScenario(Scenario scenario) throws Exception {
 
-        ExtentReports extent = ExtentManager.getInstance();
-        ExtentTestManager.setTest(extent.createTest(scenario.getName()));
-
-        DriverFactory.createDriver();
-
-        ExtentTestManager.getTest()
-                .log(Status.INFO, "Starting Scenario: " + scenario.getName());
+        // 🔐 Acquire device for THIS scenario
+        DeviceConfig device = DevicePool.acquire();
+        DeviceContext.set(device);
 
         System.out.println(
-                "Global timeout (seconds): " + Timeouts.global().getSeconds()
+                "🚀 START SCENARIO | THREAD=" + Thread.currentThread().getId()
+                        + " | DEVICE=" + device.device()
+                        + " | OS=" + device.os()
+                        + " | SCENARIO=" + scenario.getName()
         );
 
-        startRecordingIfRequired();
+        ExtentReports extent = ExtentManager.getInstance();
+        ExtentTestManager.setTest(
+                extent.createTest(
+                        scenario.getName()
+                                + " [" + device.device()
+                                + " | Android " + device.os() + "]"
+                )
+        );
+
+        DriverFactory.createDriver();
+        ExtentTestManager.getTest().log(Status.INFO, "Scenario Started");
     }
 
     /* =======================================================
-       AFTER SCENARIO
+       STEP VISIBILITY (CONSOLE + REPORT)
+       ======================================================= */
+    @BeforeStep
+    public void beforeStep(Scenario scenario) {
+
+        DeviceConfig device = DeviceContext.get();
+
+        System.out.println(
+                "➡ STEP START | THREAD=" + Thread.currentThread().getId()
+                        + " | DEVICE=" + device.device()
+                        + " | SCENARIO=" + scenario.getName()
+        );
+    }
+
+    @AfterStep
+    public void afterStep(Scenario scenario) {
+
+        DeviceConfig device = DeviceContext.get();
+
+        System.out.println(
+                "⬅ STEP END   | THREAD=" + Thread.currentThread().getId()
+                        + " | DEVICE=" + device.device()
+                        + " | STATUS=" + scenario.getStatus()
+        );
+    }
+
+    /* =======================================================
+       AFTER SCENARIO → RELEASE DEVICE
        ======================================================= */
     @After
     public void afterScenario(Scenario scenario) {
+
+        DeviceConfig device = DeviceContext.get();
 
         if (scenario.isFailed()) {
             attachFailureScreenshot();
@@ -74,94 +107,19 @@ public class Hooks {
             ExtentTestManager.getTest().pass("Scenario Passed");
         }
 
-        stopRecordingIfRequired(scenario);
-
         DriverFactory.quitDriver();
+
+        // 🔓 Release device back to pool
+        DevicePool.release(device);
+        DeviceContext.clear();
+
+        System.out.println(
+                "🏁 END SCENARIO | THREAD=" + Thread.currentThread().getId()
+                        + " | DEVICE=" + device.device()
+                        + " | STATUS=" + scenario.getStatus()
+        );
+
         ExtentTestManager.unload();
-    }
-
-    /* =======================================================
-       RECORDING CONTROL (LOCAL ONLY)
-       ======================================================= */
-    private void startRecordingIfRequired() {
-
-        String runEnv = ConfigReader.getOrDefault("run_env", "local");
-        boolean record =
-                Boolean.parseBoolean(
-                        ConfigReader.getOrDefault("record_video", "false")
-                );
-
-        if (!"local".equalsIgnoreCase(runEnv) || !record) {
-            return;
-        }
-
-        try {
-            AppiumDriver driver = DriverFactory.getDriver();
-
-            Map<String, Object> params = new HashMap<>();
-            params.put("maxDurationSec", 1800);
-            params.put("bitRate", 800000);
-            params.put("videoType", "mp4");
-            params.put("resolution", "720x1280");
-
-            driver.executeScript(
-                    "mobile: startMediaProjectionRecording", params
-            );
-        } catch (Exception e) {
-            System.out.println(
-                    "⚠ Failed to start recording: " + e.getMessage()
-            );
-        }
-    }
-
-    private void stopRecordingIfRequired(Scenario scenario) {
-
-        String runEnv = ConfigReader.getOrDefault("run_env", "local");
-        boolean record =
-                Boolean.parseBoolean(
-                        ConfigReader.getOrDefault("record_video", "false")
-                );
-
-        if (!"local".equalsIgnoreCase(runEnv) || !record) {
-            return;
-        }
-
-        try {
-            AppiumDriver driver = DriverFactory.getDriver();
-
-            Object result =
-                    driver.executeScript(
-                            "mobile: stopMediaProjectionRecording"
-                    );
-
-            if (result == null) return;
-
-            byte[] videoBytes =
-                    Base64.getDecoder().decode(result.toString());
-
-            String dir =
-                    ConfigReader.getOrDefault(
-                            "recording_path", "test-output/videos"
-                    );
-
-            Files.createDirectories(Paths.get(dir));
-
-            String safeName =
-                    sanitize(scenario.getName())
-                            + "_" + System.currentTimeMillis()
-                            + ".mp4";
-
-            Path videoPath = Paths.get(dir, safeName);
-            Files.write(videoPath, videoBytes);
-
-            ExtentTestManager.getTest()
-                    .log(Status.INFO, "Video saved: " + videoPath);
-
-        } catch (Exception e) {
-            System.out.println(
-                    "⚠ Failed to stop/save recording: " + e.getMessage()
-            );
-        }
     }
 
     /* =======================================================
@@ -183,23 +141,12 @@ public class Hooks {
     }
 
     /* =======================================================
-       HELPERS
-       ======================================================= */
-    private String sanitize(String name) {
-        return name.replaceAll("[^a-zA-Z0-9._-]", "_");
-    }
-
-    /* =======================================================
-       APPium SERVER SHUTDOWN
+       APPIUM SERVER SHUTDOWN (LOCAL ONLY)
        ======================================================= */
     @AfterAll
     public static void afterAll() {
-        String runEnv = ConfigReader.getOrDefault("run_env", "local");
-
-        if (!"local".equalsIgnoreCase(runEnv)) {
-            return;
+        if (ConfigReader.isLocal()) {
+            AppiumServerManager.stopServerIfRequired();
         }
-
-        AppiumServerManager.stopServerIfRequired();
     }
 }
