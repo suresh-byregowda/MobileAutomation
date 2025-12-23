@@ -5,14 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="edf44ee2-3aad-4f81-82c7-7da7ae063f80" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/listeners/Log4j2TestNGListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/log4j2.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/hooks/Hooks.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hooks/Hooks.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/utils/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/Log.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/pages/otg/OtgLoginPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/pages/otg/OtgLoginPage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/config/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/config/local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/log4j2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/log4j2.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/capabilities/browserstack.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/devices/android_devices.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/local.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/local_old.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/local_older.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,10 +70,9 @@
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
-  <component name="RunManager" selected="Application.JasyptEncryptor">
-    <configuration name="JasyptEncryptor" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Maven.local">
+    <configuration name="JasyptEncryptor" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="tools.JasyptEncryptor" />
-      <module name="mobile-automation-framework" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="tools.*" />
@@ -204,7 +205,6 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.KeyGenerator" />
-        <item itemvalue="Application.JasyptEncryptor" />
       </list>
     </recent_temporary>
   </component>

@@ -31,7 +31,7 @@
 
     <Loggers>
 
-        <!-- Framework Logger -->
+
         <Root level="info">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="FileLogger"/>

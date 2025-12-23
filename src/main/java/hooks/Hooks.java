@@ -18,6 +18,9 @@ import utils.ConfigReader;
 import utils.DeviceContext;
 import utils.DevicePool;
 import models.DeviceConfig;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 
 public class Hooks {
 
