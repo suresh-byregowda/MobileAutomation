@@ -4,6 +4,8 @@ import base.BasePage;
 import factory.DriverFactory;
 import hooks.Hooks;
 import io.appium.java_client.AppiumDriver;
+
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebElement;
 import utils.*;
 import utils.keys.OnTheGoKey;

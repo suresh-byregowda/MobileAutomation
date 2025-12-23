@@ -2,8 +2,11 @@ package utils;
 
 import com.aventstack.extentreports.Status;
 import listeners.ExtentTestManager;
+import org.apache.logging.log4j.LogManager;
 
 import java.time.LocalDateTime;
+
+import org.apache.logging.log4j.Logger;
 
 /**
  * Central logging utility for console + Extent report.

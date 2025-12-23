@@ -1,0 +1,5 @@
+username,password,expectedResult
+demo@user,Pass@123,success
+invalid@user,wrongpass,error
+test@domain.com,Test@456,success
+locked@user,Lock@789,locked

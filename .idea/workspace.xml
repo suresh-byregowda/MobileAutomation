@@ -4,15 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="edf44ee2-3aad-4f81-82c7-7da7ae063f80" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/listeners/Log4j2TestNGListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/resources/log4j2.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+    <list default="true" id="31d23684-bf11-4bbc-ad82-801d6023d29a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/hooks/Hooks.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hooks/Hooks.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/utils/Log.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/Log.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/pages/otg/OtgLoginPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/pages/otg/OtgLoginPage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/resources/config/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/config/local.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,81 +19,28 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="main" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;GadekrSachin&quot;
-  }
-}</component>
-  <component name="GithubDefaultAccount">
-    <option name="defaultAccountId" value="0242286b-f2f9-4c49-8e54-8527c5f66998" />
-  </component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/suresh-byregowda/MobileAutomation.git&quot;,
-    &quot;accountId&quot;: &quot;0242286b-f2f9-4c49-8e54-8527c5f66998&quot;
-  }
-}</component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 0
-}</component>
-  <component name="ProjectId" id="36v4q3eT9SqLT6YnWkEVIBxzurG" />
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 7
+}]]></component>
+  <component name="ProjectId" id="36xWSOrKfpcpUMDrkeLFT687vjG" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.JasyptEncryptor.executor&quot;: &quot;Run&quot;,
-    &quot;Application.KeyGenerator.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.local.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;sachin&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Sachin/Project/Lingo/MobileAutomation&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.LOCAL.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "rajat",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Rajat.Chaubey/Downloads/LingoPOC/MobileAutomation/MobileAutomation"
   }
-}</component>
-  <component name="RunManager" selected="Application.JasyptEncryptor">
-    <configuration name="JasyptEncryptor" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="tools.JasyptEncryptor" />
-      <module name="mobile-automation-framework" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="tools.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="KeyGenerator" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="tools.KeyGenerator" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="tools.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="browserStack" type="MavenRunConfiguration" factoryName="Maven">
+}]]></component>
+  <component name="RunManager" selected="Maven.LOCAL">
+    <configuration name="BrowserStack" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="myGeneralSettings" />
         <option name="myRunnerSettings" />
@@ -129,7 +75,7 @@
       </MavenSettings>
       <method v="2" />
     </configuration>
-    <configuration name="local" type="MavenRunConfiguration" factoryName="Maven">
+    <configuration name="LOCAL" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="myGeneralSettings" />
         <option name="myRunnerSettings" />
@@ -166,64 +112,20 @@
       </MavenSettings>
       <method v="2" />
     </configuration>
-    <configuration name="mobile-automation-framework" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
-      <MavenSettings>
-        <option name="myGeneralSettings" />
-        <option name="myRunnerSettings" />
-        <option name="myRunnerParameters">
-          <MavenRunnerParameters>
-            <option name="cmdOptions" />
-            <option name="profiles">
-              <set />
-            </option>
-            <option name="goals">
-              <list />
-            </option>
-            <option name="multimoduleDir" />
-            <option name="pomFileName" />
-            <option name="profilesMap">
-              <map />
-            </option>
-            <option name="projectsCmdOptionValues">
-              <list />
-            </option>
-            <option name="resolveToWorkspace" value="false" />
-            <option name="workingDirPath" value="$PROJECT_DIR$" />
-          </MavenRunnerParameters>
-        </option>
-      </MavenSettings>
-      <method v="2" />
-    </configuration>
     <list>
-      <item itemvalue="Application.JasyptEncryptor" />
-      <item itemvalue="Application.KeyGenerator" />
-      <item itemvalue="Maven.browserStack" />
-      <item itemvalue="Maven.local" />
-      <item itemvalue="Maven.mobile-automation-framework" />
+      <item itemvalue="Maven.LOCAL" />
+      <item itemvalue="Maven.BrowserStack" />
     </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.KeyGenerator" />
-        <item itemvalue="Application.JasyptEncryptor" />
-      </list>
-    </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="edf44ee2-3aad-4f81-82c7-7da7ae063f80" name="Changes" comment="" />
-      <created>1765873899050</created>
+      <changelist id="31d23684-bf11-4bbc-ad82-801d6023d29a" name="Changes" comment="" />
+      <created>1765948702562</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1765873899050</updated>
+      <updated>1765948702562</updated>
     </task>
     <servers />
-  </component>
-  <component name="github-copilot-workspace">
-    <instructionFileLocations>
-      <option value=".github/instructions" />
-    </instructionFileLocations>
-    <promptFileLocations>
-      <option value=".github/prompts" />
-    </promptFileLocations>
   </component>
 </project>
