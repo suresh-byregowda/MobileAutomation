@@ -14,6 +14,7 @@ import java.util.Map;
 public class OtgLoginPage extends BasePage {
 
     private final LocatorLogic locator;
+    private static final Logger log =  Log.getLogger(OtgLoginPage.class);
 
     public OtgLoginPage() {
         super(DriverFactory.getDriver());
@@ -53,6 +54,8 @@ public class OtgLoginPage extends BasePage {
 
 
     public void excel_fetch_data() {
+        log.info("Entering username");
+
 
 //        CSv_Fetch
 
@@ -64,6 +67,7 @@ public class OtgLoginPage extends BasePage {
             System.out.println("Testing with: " + username + " | " + password);
             performSSOSignIn(username, password);
         }
+        log.info("Entering Username and Password");
 
 
 

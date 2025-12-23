@@ -21,11 +21,16 @@ import models.DeviceConfig;
 
 public class Hooks {
 
+
+    private static final Logger log = Log.getLogger(Hooks.class);
+
     /* =======================================================
        APPIUM SERVER LIFECYCLE (LOCAL ONLY)
        ======================================================= */
     @BeforeAll
     public static void beforeAll() {
+        log.info("Before All....");
+
         if (!ConfigReader.isLocal()) {
             System.out.println(
                     ">>> run_env=browserstack → Skipping Appium server startup"
@@ -137,7 +142,8 @@ public class Hooks {
                     .addScreenCaptureFromBase64String(
                             base64, "Failure Screenshot"
                     );
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     /* =======================================================
