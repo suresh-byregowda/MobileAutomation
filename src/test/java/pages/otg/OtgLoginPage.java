@@ -7,7 +7,7 @@ import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.WebElement;
 import utils.*;
 import utils.keys.OnTheGoKey;
-
+import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Map;
 

@@ -20,12 +20,12 @@ import utils.DevicePool;
 import models.DeviceConfig;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-
+import utils.Log;
 
 public class Hooks {
 
 
-    private static final Logger log = Log.getLogger(Hooks.class);
+    private static final Logger log =  Log.getLogger(Hooks.class);
 
     /* =======================================================
        APPIUM SERVER LIFECYCLE (LOCAL ONLY)
