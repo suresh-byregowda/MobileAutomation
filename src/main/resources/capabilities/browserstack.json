@@ -1,27 +1,18 @@
 {
-  "androidCapabilities": {
-    "platformName": "android",
-    "deviceName": "Google Pixel 8",
-    "osVersion": "14",
+  "commonCapabilities": {
     "project": "Mobile Automation POC",
-    "build": "Android POC",
-    "name": "General Store Test",
     "browserstack.debug": true,
     "browserstack.networkLogs": true,
     "browserstack.appium_version": "2.0.0"
   },
 
-  "iosCapabilities": {
+  "android": {
+    "platformName": "android",
+    "automationName": "UiAutomator2"
+  },
+
+  "ios": {
     "platformName": "ios",
-    "deviceName": "iPhone 15 Pro",
-    "osVersion": "17",
-    "project": "Mobile Automation POC",
-    "build": "iOS POC",
-    "name": "General Store Test",
-    "browserstack.debug": true,
-    "browserstack.networkLogs": true,
-    "browserstack.appium_version": "2.0.0",
-    "browserstack.enableBiometric": true,
-    "browserstack.resignApp": true
+    "automationName": "XCUITest"
   }
 }

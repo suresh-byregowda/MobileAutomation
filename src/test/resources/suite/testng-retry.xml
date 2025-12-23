@@ -1,5 +1,9 @@
-<suite name="Retry Execution" parallel="false">
-    <test name="Retry Run">
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Android Retry Execution"
+       parallel="methods"
+       thread-count="1">
+
+    <test name="Retry Failed Scenarios">
         <classes>
             <class name="runners.RetryRunner"/>
         </classes>

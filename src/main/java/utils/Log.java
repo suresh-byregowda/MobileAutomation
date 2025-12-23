@@ -11,6 +11,11 @@ import java.time.LocalDateTime;
  */
 public final class Log {
 
+    private static final String LOG_DIR = "test-output/logs";
+    private static final String LOG_FILE =
+            LOG_DIR + "/execution_" + System.currentTimeMillis() + ".log";
+
+
     private Log() {}
 
     // ===========================
@@ -18,7 +23,7 @@ public final class Log {
     // ===========================
     public static void info(String message) {
         System.out.println(timestamp() + " [INFO] " + message);
-
+        writeToFile("INFO", message);
         try {
             if (ExtentTestManager.getTest() != null) {
                 ExtentTestManager.getTest().log(Status.INFO, message);
@@ -31,7 +36,7 @@ public final class Log {
     // ===========================
     public static void pass(String message) {
         System.out.println(timestamp() + " [PASS] " + message);
-
+        writeToFile("PASS", message);
         try {
             if (ExtentTestManager.getTest() != null) {
                 ExtentTestManager.getTest().log(Status.PASS, message);
@@ -44,7 +49,7 @@ public final class Log {
     // ===========================
     public static void warn(String message) {
         System.out.println(timestamp() + " [WARN] " + message);
-
+        writeToFile("WARN", message);
         try {
             if (ExtentTestManager.getTest() != null) {
                 ExtentTestManager.getTest().log(Status.WARNING, message);
@@ -57,7 +62,7 @@ public final class Log {
     // ===========================
     public static void error(String message) {
         System.err.println(timestamp() + " [ERROR] " + message);
-
+        writeToFile("ERROR", message);
         try {
             if (ExtentTestManager.getTest() != null) {
                 ExtentTestManager.getTest().log(Status.FAIL, message);
@@ -70,7 +75,10 @@ public final class Log {
     // ===========================
     public static void exception(Throwable throwable) {
         error(throwable.getMessage());
-
+        writeToFile("EXCEPTION", throwable.toString());
+        for (StackTraceElement el : throwable.getStackTrace()) {
+            writeToFile("EXCEPTION", "    at " + el.toString());
+        }
         try {
             if (ExtentTestManager.getTest() != null) {
                 ExtentTestManager.getTest().fail(throwable);
@@ -84,4 +92,22 @@ public final class Log {
     private static String timestamp() {
         return LocalDateTime.now().toString();
     }
+
+    private static synchronized void writeToFile(String level, String message) {
+        try {
+            Path dir = Paths.get(LOG_DIR);
+            if (!Files.exists(dir)) {
+                Files.createDirectories(dir);
+            }
+
+            try (FileWriter fw = new FileWriter(LOG_FILE, true);
+                 PrintWriter pw = new PrintWriter(fw)) {
+
+                pw.println(timestamp() + " [" + level + "] " + message);
+            }
+        } catch (IOException e) {
+            System.err.println("⚠ Failed to write log file: " + e.getMessage());
+        }
+    }
+
 }

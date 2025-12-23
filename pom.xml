@@ -163,13 +163,20 @@
 
                 <configuration>
 
-                    <!-- 🔴 REQUIRED for retry to work -->
+                    <!-- ✅ DO NOT fail build on skipped devices -->
                     <testFailureIgnore>true</testFailureIgnore>
 
-                    <!-- 🔴 REQUIRED: tell Surefire which TestNG suite to run -->
+                    <!-- ✅ REQUIRED: TestNG suite -->
                     <suiteXmlFiles>
                         <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
                     </suiteXmlFiles>
+
+                    <!-- 🔴 CRITICAL FOR PARALLEL EXECUTION -->
+                    <forkCount>1</forkCount>
+                    <reuseForks>true</reuseForks>
+
+                    <!-- prevents output serialization -->
+                    <redirectTestOutputToFile>false</redirectTestOutputToFile>
 
                     <useSystemClassLoader>false</useSystemClassLoader>
 
@@ -184,6 +191,7 @@
 
                 </configuration>
             </plugin>
+
 
 
             <!-- ==========================
