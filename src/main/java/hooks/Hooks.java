@@ -13,6 +13,7 @@ import io.cucumber.java.*;
 
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.testng.Reporter;
 
 import utils.ConfigReader;
 import utils.DeviceContext;
@@ -21,29 +22,34 @@ import models.DeviceConfig;
 
 public class Hooks {
 
-    /* =======================================================
-       APPIUM SERVER LIFECYCLE (LOCAL ONLY)
-       ======================================================= */
     @BeforeAll
     public static void beforeAll() {
-        if (!ConfigReader.isLocal()) {
-            System.out.println(
-                    ">>> run_env=browserstack → Skipping Appium server startup"
-            );
-            return;
+        if (ConfigReader.isLocal()) {
+            AppiumServerManager.startServerIfRequired();
         }
-        AppiumServerManager.startServerIfRequired();
     }
 
-    /* =======================================================
-       BEFORE SCENARIO → ACQUIRE DEVICE
-       ======================================================= */
-    @Before
+    @Before(order = 0)
     public void beforeScenario(Scenario scenario) throws Exception {
 
-        // 🔐 Acquire device for THIS scenario
-        DeviceConfig device = DevicePool.acquire();
+        DeviceConfig device;
+
+        if (ConfigReader.isBrowserStack()) {
+            device = DevicePool.acquire();
+        } else {
+            device = new DeviceConfig(
+                    ConfigReader.getOrDefault("device_name", "LOCAL_DEVICE"),
+                    ConfigReader.getOrDefault("platform_version", "LOCAL_OS")
+            );
+        }
+
         DeviceContext.set(device);
+
+        Reporter.getCurrentTestResult()
+                .setAttribute(
+                        "deviceLabel",
+                        device.device() + " (Android " + device.os() + ")"
+                );
 
         System.out.println(
                 "🚀 START SCENARIO | THREAD=" + Thread.currentThread().getId()
@@ -65,66 +71,37 @@ public class Hooks {
         ExtentTestManager.getTest().log(Status.INFO, "Scenario Started");
     }
 
-    /* =======================================================
-       STEP VISIBILITY (CONSOLE + REPORT)
-       ======================================================= */
-    @BeforeStep
-    public void beforeStep(Scenario scenario) {
-
-        DeviceConfig device = DeviceContext.get();
-
-        System.out.println(
-                "➡ STEP START | THREAD=" + Thread.currentThread().getId()
-                        + " | DEVICE=" + device.device()
-                        + " | SCENARIO=" + scenario.getName()
-        );
-    }
-
-    @AfterStep
-    public void afterStep(Scenario scenario) {
-
-        DeviceConfig device = DeviceContext.get();
-
-        System.out.println(
-                "⬅ STEP END   | THREAD=" + Thread.currentThread().getId()
-                        + " | DEVICE=" + device.device()
-                        + " | STATUS=" + scenario.getStatus()
-        );
-    }
-
-    /* =======================================================
-       AFTER SCENARIO → RELEASE DEVICE
-       ======================================================= */
-    @After
+    @After(order = Integer.MAX_VALUE)
     public void afterScenario(Scenario scenario) {
 
         DeviceConfig device = DeviceContext.get();
 
-        if (scenario.isFailed()) {
-            attachFailureScreenshot();
-            ExtentTestManager.getTest().fail("Scenario Failed");
-        } else {
-            ExtentTestManager.getTest().pass("Scenario Passed");
+        try {
+            if (scenario.isFailed()) {
+                attachFailureScreenshot();
+                ExtentTestManager.getTest().fail("Scenario Failed");
+            } else {
+                ExtentTestManager.getTest().pass("Scenario Passed");
+            }
+        } finally {
+
+            DriverFactory.quitDriver();
+
+            if (ConfigReader.isBrowserStack()) {
+                DevicePool.release(device);
+            }
+
+            System.out.println(
+                    "🏁 END SCENARIO | THREAD=" + Thread.currentThread().getId()
+                            + " | DEVICE=" + device.device()
+                            + " | STATUS=" + scenario.getStatus()
+            );
+
+            ExtentTestManager.unload();
+            DeviceContext.clear();
         }
-
-        DriverFactory.quitDriver();
-
-        // 🔓 Release device back to pool
-        DevicePool.release(device);
-        DeviceContext.clear();
-
-        System.out.println(
-                "🏁 END SCENARIO | THREAD=" + Thread.currentThread().getId()
-                        + " | DEVICE=" + device.device()
-                        + " | STATUS=" + scenario.getStatus()
-        );
-
-        ExtentTestManager.unload();
     }
 
-    /* =======================================================
-       SCREENSHOT ON FAILURE
-       ======================================================= */
     private void attachFailureScreenshot() {
         try {
             AppiumDriver driver = DriverFactory.getDriver();
@@ -140,9 +117,6 @@ public class Hooks {
         } catch (Exception ignored) {}
     }
 
-    /* =======================================================
-       APPIUM SERVER SHUTDOWN (LOCAL ONLY)
-       ======================================================= */
     @AfterAll
     public static void afterAll() {
         if (ConfigReader.isLocal()) {

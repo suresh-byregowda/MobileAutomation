@@ -14,7 +14,7 @@ Feature: General Store POC
       | user        | country    |
       | User01      | Argentina  |
       | User02      | Brazil     |
-      #| User03      | India      |
+      | User03      | India      |
       #| User04      | USA        |
       #| User05      | Canada     |
       #| User06      | Germany    |
@@ -25,9 +25,9 @@ Feature: General Store POC
       #| User11      | Chile      |
       #| User12      | Peru       |
       #| User13      | Japan      |
-      | User14      | China      |
+      #| User14      | China      |
       #| User15      | Korea      |
-      #| User16      | Australia  |
+      | User16      | Australia  |
       #| User17      | UK         |
       #| User18      | Ireland    |
       #| User19      | Sweden     |
@@ -41,7 +41,7 @@ Feature: General Store POC
       #| User27      | Portugal   |
       #| User28      | Greece     |
       #| User29      | Turkey     |
-      | User30      | UAE        |
+      #| User30      | UAE        |
 
 
   @poc_add
