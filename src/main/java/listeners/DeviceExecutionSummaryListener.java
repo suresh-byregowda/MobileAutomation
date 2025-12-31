@@ -1,57 +1,53 @@
 package listeners;
 
 import org.testng.*;
+
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DeviceExecutionSummaryListener implements ITestListener, ISuiteListener {
+public class DeviceExecutionSummaryListener
+        implements ITestListener, ISuiteListener {
 
-    private static final Set<String> PASSED_DEVICES =
+    private static final Set<String> PASSED =
             ConcurrentHashMap.newKeySet();
 
-    private static final Set<String> SKIPPED_DEVICES =
+    private static final Set<String> SKIPPED =
             ConcurrentHashMap.newKeySet();
 
-    private String deviceLabel() {
-        String device = System.getProperty("device", "UNKNOWN_DEVICE");
-        String os     = System.getProperty("os_version", "UNKNOWN_OS");
-        return device + " (Android " + os + ")";
+    private String label(ITestResult result) {
+        Object l = result.getAttribute("deviceLabel");
+        return l == null ? "UNKNOWN" : l.toString();
     }
-
-    /* ================= TEST EVENTS ================= */
 
     @Override
     public void onTestSuccess(ITestResult result) {
-        PASSED_DEVICES.add(deviceLabel());
+        PASSED.add(label(result));
     }
 
     @Override
     public void onTestSkipped(ITestResult result) {
-        SKIPPED_DEVICES.add(deviceLabel());
+        SKIPPED.add(label(result));
     }
-
-    /* ================= FINAL SUMMARY ================= */
 
     @Override
     public void onFinish(ISuite suite) {
 
-        System.out.println("\n================ DEVICE EXECUTION SUMMARY ================\n");
+        System.out.println(
+                "\n================ DEVICE EXECUTION SUMMARY ================\n"
+        );
 
-        if (!SKIPPED_DEVICES.isEmpty()) {
+        if (!SKIPPED.isEmpty()) {
             System.out.println("SKIPPED:");
-            SKIPPED_DEVICES.forEach(
-                    d -> System.out.println("  - " + d + " – unavailable")
-            );
-            System.out.println();
+            SKIPPED.forEach(d -> System.out.println("  - " + d));
         }
 
-        if (!PASSED_DEVICES.isEmpty()) {
-            System.out.println("PASSED:");
-            PASSED_DEVICES.forEach(
-                    d -> System.out.println("  - " + d)
-            );
+        if (!PASSED.isEmpty()) {
+            System.out.println("\nPASSED:");
+            PASSED.forEach(d -> System.out.println("  - " + d));
         }
 
-        System.out.println("\n==========================================================\n");
+        System.out.println(
+                "\n==========================================================\n"
+        );
     }
 }

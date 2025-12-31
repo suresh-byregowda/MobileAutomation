@@ -2,7 +2,6 @@ package factory;
 
 import io.appium.java_client.AppiumDriver;
 import utils.ConfigReader;
-import utils.DeviceContext;
 
 public final class DriverFactory {
 
@@ -15,11 +14,8 @@ public final class DriverFactory {
 
         if (DRIVER.get() != null) return;
 
-        String runEnv =
-                ConfigReader.getOrDefault("run_env", "local").toLowerCase();
-
         AppiumDriver driver =
-                "browserstack".equals(runEnv)
+                ConfigReader.isBrowserStack()
                         ? BrowserStackDriverManager.createBrowserStackDriver()
                         : LocalDriverManager.createLocalDriver();
 
@@ -44,7 +40,6 @@ public final class DriverFactory {
             } catch (Exception ignored) {}
             finally {
                 DRIVER.remove();
-                DeviceContext.clear(); // ✅ IMPORTANT
                 System.out.println(">>> Driver quit for thread.");
             }
         }
